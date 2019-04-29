@@ -46,20 +46,21 @@ public class ForestMapBuilder : MapBuilder
 
     public override void BuildStructures()
     {
-        // Makes a border for map
-        MapHelper.MakeBox(map.structures, new Vector3Int(-size / 2 - 1, -size / 2 - 1, 0), new Vector3Int(size / 2 + 1, -size / 2 + 1, 0), tiles[0]);
 
-        int numBerOfStructures = Mathf.CeilToInt(Mathf.Sqrt(size / 6.5f));
-        for(int i = 0; i <= Mathf.CeilToInt(Random.value * numBerOfStructures); i++)
-        {
-            int w = (int)(Random.value * (MAX_STRUCTURE_SIZE -3) ) + 3;
-            int h = (int)(Random.value * (MAX_STRUCTURE_SIZE -3) ) + 3;
-            int posX = (int)(Random.value * (size-w));
-            int posY = (int)(Random.value * (size-h));
-            Vector3Int stVec = new Vector3Int(-size / 2 + posX, -size / 2 + posY, 0);
-            Vector3Int endVec = new Vector3Int(-size / 2 + posX + w, -size / 2 + posY + h, 0);
-            MapHelper.MakeBox(map.structures, stVec, endVec, tiles[2]);
-        }
+        //int numBerOfStructures = Mathf.CeilToInt(Mathf.Sqrt(size / 6.5f));
+        //for(int i = 0; i <= Mathf.CeilToInt(Random.value * numBerOfStructures); i++)
+        //{
+        //    int w = (int)(Random.value * (MAX_STRUCTURE_SIZE -3) ) + 3;
+        //    int h = (int)(Random.value * (MAX_STRUCTURE_SIZE -3) ) + 3;
+        //    int posX = (int)(Random.value * (size-w));
+        //    int posY = (int)(Random.value * (size-h));
+        //    Vector3Int stVec = new Vector3Int(-size / 2 + posX, -size / 2 + posY, 0);
+        //    Vector3Int endVec = new Vector3Int(-size / 2 + posX + w, -size / 2 + posY + h, 0);
+        //    MapHelper.MakeBox(map.structures, stVec, endVec, tiles[2]);
+        //}
+
+        // Makes a border for map
+        MapHelper.MakeBox(map.structures, new Vector3Int(-size / 2 - 1, -size / 2 - 1, 0), new Vector3Int(size / 2 + 1, size / 2 + 1, 0), tiles[0]);
     }
 }
 
@@ -110,13 +111,7 @@ public static class MapHelper
             {
                 if (UnityEngine.Random.value < fillPerc && ((counter_width == 0 || counter_width == width - 1) || (counter_height == 0 || counter_height == height - 1)))
                 {
-                    if (!hasDoor && UnityEngine.Random.value < 0.1f && (counter_width != 0 || counter_width != width) && (counter_height != 0 || counter_height != height))
-                    {
-                        // leave empty
-                        hasDoor = true;
-                    }
-                    else
-                        target.SetTile(new Vector3Int(stPos.x + counter_width, stPos.y + counter_height, 0), tile);
+                    target.SetTile(new Vector3Int(stPos.x + counter_width, stPos.y + counter_height, 0), tile);
                 }
             }
         }
