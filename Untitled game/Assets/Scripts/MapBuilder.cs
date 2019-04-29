@@ -46,7 +46,9 @@ public class ForestMapBuilder : MapBuilder
 
     public override void BuildStructures()
     {
-        
+        // Makes a border for map
+        MapHelper.MakeBox(map.structures, new Vector3Int(-size / 2 - 1, -size / 2 - 1, 0), new Vector3Int(size / 2 + 1, -size / 2 + 1, 0), tiles[0]);
+
         int numBerOfStructures = Mathf.CeilToInt(Mathf.Sqrt(size / 6.5f));
         for(int i = 0; i <= Mathf.CeilToInt(Random.value * numBerOfStructures); i++)
         {
@@ -102,19 +104,19 @@ public static class MapHelper
         int width = endPos.x - stPos.x;
         int height = endPos.y - stPos.y;
         bool hasDoor = false;
-        for (int cw = 0; cw < width; cw++)
+        for (int counter_width = 0; counter_width < width; counter_width++)
         {
-            for (int ch = 0; ch < height; ch++)
+            for (int counter_height = 0; counter_height < height; counter_height++)
             {
-                if (UnityEngine.Random.value < fillPerc && ((cw == 0 || cw == width - 1) || (ch == 0 || ch == height - 1)))
+                if (UnityEngine.Random.value < fillPerc && ((counter_width == 0 || counter_width == width - 1) || (counter_height == 0 || counter_height == height - 1)))
                 {
-                    if (!hasDoor && UnityEngine.Random.value < 0.1f && (cw != 0 || cw != width) && (ch != 0 || ch != height))
+                    if (!hasDoor && UnityEngine.Random.value < 0.1f && (counter_width != 0 || counter_width != width) && (counter_height != 0 || counter_height != height))
                     {
                         // leave empty
                         hasDoor = true;
                     }
                     else
-                        target.SetTile(new Vector3Int(stPos.x + cw, stPos.y + ch, 0), tile);
+                        target.SetTile(new Vector3Int(stPos.x + counter_width, stPos.y + counter_height, 0), tile);
                 }
             }
         }
@@ -126,15 +128,15 @@ public static class MapHelper
         {
             throw new System.Exception("Start vector coord less than end vector");
         }
-        for (int cw = 0; cw < endPos.x - stPos.x; cw++)
+        for (int counter_width = 0; counter_width < endPos.x - stPos.x; counter_width++)
         {
-            for (int ch = 0; ch < endPos.y - stPos.y; ch++)
+            for (int counter_height = 0; counter_height < endPos.y - stPos.y; counter_height++)
             {
 
                 if (UnityEngine.Random.value < fillPerc)
                 {
                     
-                    target.SetTile(new Vector3Int(stPos.x + cw, stPos.y + ch, 0), tile);
+                    target.SetTile(new Vector3Int(stPos.x + counter_width, stPos.y + counter_height, 0), tile);
                 }
             }
         }
@@ -143,14 +145,14 @@ public static class MapHelper
     // fills with alt if perc not satisfied
     public static Tilemap FillSquareAlt(Tilemap target, int side, Vector3Int stPos, float fillPerc, TileBase tile, TileBase altTile)
     {
-        for (int cw = 0; cw < side; cw++)
+        for (int counter_width = 0; counter_width < side; counter_width++)
         {
-            for (int ch = 0; ch < side; ch++)
+            for (int counter_height = 0; counter_height < side; counter_height++)
             {
                 if (UnityEngine.Random.value < fillPerc)
-                    target.SetTile(new Vector3Int(stPos.x + cw, stPos.y + ch, 0), tile);
+                    target.SetTile(new Vector3Int(stPos.x + counter_width, stPos.y + counter_height, 0), tile);
                 else
-                    target.SetTile(new Vector3Int(stPos.x + cw, stPos.y + ch, 0), altTile);
+                    target.SetTile(new Vector3Int(stPos.x + counter_width, stPos.y + counter_height, 0), altTile);
             }
         }
         return target;
