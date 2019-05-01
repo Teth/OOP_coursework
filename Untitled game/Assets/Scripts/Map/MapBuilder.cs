@@ -39,14 +39,14 @@ public class ForestMapBuilder : MapBuilder
     public override void BuildGround()
     {
         occupiedTiles = new int[size/2, size / 2];
-        Vector3Int stPos = new Vector3Int(-size / 2, -size / 2, 0);
-        Vector3Int endPos = new Vector3Int(size / 2, size / 2, 0);
-        MapHelper.FillRect(map.ground, stPos, endPos, tiles[0]);
+        Rect mapArea = new Rect(-size / 2, -size / 2, size, size);
+        MapHelper.FillRect(map.ground, mapArea, tiles[0]);
     }
 
     public override void BuildStructures()
     {
-
+        StructureGenerator gen = new StructureGenerator(map, tiles);
+        gen.CreateDungeon(new Rect(-size / 2, -size / 2, size/2, size/2));
         //int numBerOfStructures = Mathf.CeilToInt(Mathf.Sqrt(size / 6.5f));
         //for(int i = 0; i <= Mathf.CeilToInt(Random.value * numBerOfStructures); i++)
         //{
@@ -60,7 +60,7 @@ public class ForestMapBuilder : MapBuilder
         //}
 
         // Makes a border for map
-        MapHelper.MakeBox(map.structures, new Vector3Int(-size / 2 - 1, -size / 2 - 1, 0), new Vector3Int(size / 2 + 1, size / 2 + 1, 0), tiles[0]);
+        //MapHelper.MakeBox(map.structures, new Vector3Int(-size / 2 - 1, -size / 2 - 1, 0), new Vector3Int(size / 2 + 1, size / 2 + 1, 0), tiles[0]);
     }
 }
 
@@ -93,45 +93,88 @@ public static class MapHelper
         TileBase ground = (TileBase)AssetDatabase.LoadAssetAtPath("Assets/Tiles/ground.asset", typeof(TileBase));
         TileBase fossil = (TileBase)AssetDatabase.LoadAssetAtPath("Assets/Tiles/fossil.asset", typeof(TileBase));
         TileBase stone = (TileBase)AssetDatabase.LoadAssetAtPath("Assets/Tiles/stone.asset", typeof(TileBase));
+        TileBase stone_floor = (TileBase)AssetDatabase.LoadAssetAtPath("Assets/Tiles/stone_floor.asset", typeof(TileBase));
         if (ground == null)
         {
             Debug.Log("cant find files");
         }
-        return new TileBase[] { ground, fossil, stone };
+        return new TileBase[] { ground, fossil, stone, stone_floor };
     }
 
-    public static Tilemap MakeBox(Tilemap target, Vector3Int stPos, Vector3Int endPos, TileBase tile, float fillPerc = 1)
+    public static Tilemap MakeBox(Tilemap target, Rect rect, TileBase tile, float fillPerc = 1)
     {
-        int width = endPos.x - stPos.x;
-        int height = endPos.y - stPos.y;
-        bool hasDoor = false;
+        int width = (int)(rect.width);
+        int height = (int)(rect.height);
         for (int counter_width = 0; counter_width < width; counter_width++)
         {
             for (int counter_height = 0; counter_height < height; counter_height++)
             {
                 if (UnityEngine.Random.value < fillPerc && ((counter_width == 0 || counter_width == width - 1) || (counter_height == 0 || counter_height == height - 1)))
                 {
-                    target.SetTile(new Vector3Int(stPos.x + counter_width, stPos.y + counter_height, 0), tile);
+                    target.SetTile(new Vector3Int((int)(rect.xMin) + counter_width, (int)(rect.yMin) + counter_height, 0), tile);
                 }
             }
         }
         return target;
     }
-    public static void FillRect(Tilemap target, Vector3Int stPos, Vector3Int endPos, TileBase tile, float fillPerc = 1)
+
+    public static Tilemap MakeRoom(Tilemap target, Rect rect, TileBase tile, float fillPerc = 1)
     {
-        if(stPos.x >= endPos.x || stPos.y >= endPos.y)
+        int width = (int)(rect.width);
+        int height = (int)(rect.height);
+        int doorPosX = (int)((width - 2) * Random.value) + 1;
+        int doorPosY = (int)((height - 2) * Random.value) + 1;
+        if(Mathf.RoundToInt(Random.value) == 1)
         {
-            throw new System.Exception("Start vector coord less than end vector");
+            // door on vertical
+            if(width - doorPosX <= doorPosX)
+            {
+                doorPosX = width - 1;
+            }
+            else
+            {
+                doorPosX = 0;
+            }
         }
-        for (int counter_width = 0; counter_width < endPos.x - stPos.x; counter_width++)
+        else
         {
-            for (int counter_height = 0; counter_height < endPos.y - stPos.y; counter_height++)
+            if (height - doorPosY <= doorPosY)
+            {
+                doorPosY = height - 1;
+            }
+            else
+            {
+                doorPosY = 0;
+            }
+        }
+
+        for (int counter_width = 0; counter_width < width; counter_width++)
+        {
+            for (int counter_height = 0; counter_height < height; counter_height++)
+            {
+                if (UnityEngine.Random.value < fillPerc && ((counter_width == 0 || counter_width == width - 1) || (counter_height == 0 || counter_height == height - 1)))
+                {
+                    if(!(counter_width == doorPosX && counter_height == doorPosY))
+                        target.SetTile(new Vector3Int((int)(rect.xMin) + counter_width, (int)(rect.yMin) + counter_height, 0), tile);
+                }
+            }
+        }
+        return target;
+    }
+
+    public static void FillRect(Tilemap target, Rect rect, TileBase tile, float fillPerc = 1)
+    {
+        int width = (int)(rect.width);
+        int height = (int)(rect.height);
+        for (int counter_width = 0; counter_width < width; counter_width++)
+        {
+            for (int counter_height = 0; counter_height < height; counter_height++)
             {
 
                 if (UnityEngine.Random.value < fillPerc)
                 {
                     
-                    target.SetTile(new Vector3Int(stPos.x + counter_width, stPos.y + counter_height, 0), tile);
+                    target.SetTile(new Vector3Int((int)(rect.xMin) + counter_width, (int)(rect.yMin) + counter_height, 0), tile);
                 }
             }
         }
