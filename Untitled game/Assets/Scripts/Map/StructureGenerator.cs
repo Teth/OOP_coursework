@@ -177,9 +177,7 @@ public class StructureGenerator
         return newCursor;
     }
     List<Vector3Int> CreateTunnel(Rect room)
-    {
-        // DODELAT
-        Debug.Log("Connectiong rooms");      
+    {    
         directions dir;
 
         Vector2Int cursor = generateRandomPositionOnWall(room);
@@ -190,7 +188,6 @@ public class StructureGenerator
         int maxLength = 12;
         int length = 0;
         int max_chDirCounter = (int)(Random.value * 5) + 2;
-        Debug.Log(max_chDirCounter);
         List<Vector3Int> tunnelTiles = new List<Vector3Int>();
         while (!connected)
         {
@@ -212,7 +209,6 @@ public class StructureGenerator
             }
             if (ch_dir == max_chDirCounter)
             {
-                Debug.Log("Changing Direction");
                 max_chDirCounter = (int)(Random.value * 5) + 2;
                 dir = changeDirection(dir);
                 ch_dir = 0;
@@ -285,12 +281,8 @@ public class StructureGenerator
         foreach(Rect room in rooms)
         {
            tunnels.AddRange(CreateTunnel(room));
-           tunnels.AddRange(CreateTunnel(room));
-           tunnels.AddRange(CreateTunnel(room));
-           tunnels.AddRange(CreateTunnel(room));
-           tunnels.AddRange(CreateTunnel(room));
-           tunnels.AddRange(CreateTunnel(room));
-           tunnels.AddRange(CreateTunnel(room));
+            tunnels.AddRange(CreateTunnel(room));
+            tunnels.AddRange(CreateTunnel(room));
         }
         CreateTunnelWalls(tunnels);
         

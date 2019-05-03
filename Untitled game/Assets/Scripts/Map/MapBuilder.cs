@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEditor;
-
-
+using System;
 
 public class MapGenerator
 {
@@ -24,9 +23,6 @@ public class MapGenerator
 
 public class ForestMapBuilder : MapBuilder
 {
-    const int MAX_STRUCTURE_SIZE = 10;
-    int[,] occupiedTiles;
-
     public ForestMapBuilder(int size, GameMap map) : base(size, map)
     {
         setTiles(MapHelper.GetForestTileset());
@@ -38,7 +34,6 @@ public class ForestMapBuilder : MapBuilder
 
     public override void BuildGround()
     {
-        occupiedTiles = new int[size/2, size / 2];
         Rect mapArea = new Rect(-size / 2, -size / 2, size, size);
         MapHelper.FillRect(map.ground, mapArea, tiles[0]);
     }

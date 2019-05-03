@@ -15,7 +15,8 @@ public class PlayerController : MonoBehaviour
         // Start is called before the first frame update
         void Start()
         {
-            toSp = this.GetComponent<SpriteRenderer>().sprite;
+        Application.targetFrameRate = 30;
+        toSp = this.GetComponent<SpriteRenderer>().sprite;
             rb2D = GetComponent<Rigidbody2D>();
             anim = GetComponent<Animator>();
         }
@@ -23,7 +24,7 @@ public class PlayerController : MonoBehaviour
         // Update is called once per frame
         void Update()
         {
-           
+            
         }
 
         void FixedUpdate()

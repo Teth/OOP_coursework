@@ -10,7 +10,11 @@ public class cameracontroll : MonoBehaviour
     public float mouse_offset_value;
     private Vector3 velocity = Vector3.zero;
 
-
+    void Update()
+    {
+        Debug.DrawRay(target.position, transform.position);
+        RaycastHit2D hit = Physics2D.Raycast(target.position, transform.position);
+    }
     // Update is called once per frame
     void FixedUpdate()
     {
