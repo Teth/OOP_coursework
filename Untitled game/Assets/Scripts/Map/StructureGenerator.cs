@@ -8,9 +8,11 @@ public class StructureGenerator
     GameMap map;
     TileBase[] tiles;
 
-    const int dungeonTries = 1000;
-    const int MAX_WIDHT = 10;
-    const int MAX_HEIGHT = 10;
+    const int dungeonTries = 10000;
+    const int MAX_WIDHT = 18;
+    const int MAX_HEIGHT = 18;
+    const int MIN_WIDHT = 5;
+    const int MIN_HEIGHT = 4;
 
 
     public StructureGenerator(GameMap map, TileBase[] tiles)
@@ -21,26 +23,52 @@ public class StructureGenerator
 
     Rect createRandomRectangleInArea(Rect Area)
     {
-        int width = (int)((MAX_WIDHT - 4) * Random.value + 4);
-        int height = (int)((MAX_HEIGHT - 4) * Random.value + 4);
+        int width = (int)((MAX_WIDHT - MIN_WIDHT) * Random.value + MIN_WIDHT);
+        int height = (int)((MAX_HEIGHT - MIN_HEIGHT) * Random.value + MIN_HEIGHT);
         int ypos = (int)((Area.height - height) * Random.value);
         int xpos = (int)((Area.width - width) * Random.value);
        
         return new Rect((int)(Area.xMin + xpos), (int)(Area.yMin + ypos),width , height);
     }
 
-    void ConnectRooms(Rect r1)
+    enum directions
     {
-        // DODELAT
-        Debug.Log("Connectiong rooms");
-        int tunPosX = (int)((r1.width) * Random.value);
-        int tunPosY = (int)((r1.height) * Random.value);
+        Up,
+        Down,
+        Left,
+        Right
+    }
+    bool isCorner(Vector3Int tile)
+    {
+        List<Vector3Int> list = getSurroundingTiles(tile);
+        int corners = 0; 
+        if(map.ground.GetTile(list[1]) == tiles[2])
+        {
+            corners++;
+        }
+        if (map.ground.GetTile(list[3]) == tiles[2])
+        {
+            corners++;
+        }
+        if (map.ground.GetTile(list[5]) == tiles[2])
+        {
+            corners++;
+        }
+        if (map.ground.GetTile(list[7]) == tiles[2])
+        {
+            corners++;
+        }
+        return corners == 1;
+    }
+    Vector2Int generateRandomPositionOnWall(Rect r1)
+    {
+        int tunPosX = (int)((r1.width - 2) * Random.value) + 1;
+        int tunPosY = (int)((r1.height - 2) * Random.value) + 1;
         if (Mathf.RoundToInt(Random.value) == 1)
         {
-            // door on vertical
             if (r1.width - tunPosX <= tunPosX)
             {
-                tunPosX = (int)r1.xMax;
+                tunPosX = (int)r1.xMax - 1;
             }
             else
             {
@@ -52,7 +80,7 @@ public class StructureGenerator
         {
             if (r1.height - tunPosY <= tunPosY)
             {
-                tunPosY = (int)r1.yMax;
+                tunPosY = (int)r1.yMax - 1;
             }
             else
             {
@@ -60,65 +88,173 @@ public class StructureGenerator
             }
             tunPosX = tunPosX + (int)r1.xMin;
         }
-        Vector2Int cursor = new Vector2Int(tunPosX, tunPosY);
+        return new Vector2Int(tunPosX, tunPosY);
+    }
+
+    directions getTunnelDirectionFromRoom(Vector2Int cursor, Rect room)
+    {
+        if (cursor.y == room.yMax - 1)
+        {
+            return directions.Up;
+        }
+        if (cursor.y == room.yMin)
+        {
+            return directions.Down;
+        }
+        if (cursor.x == room.xMax - 1)
+        {
+            return directions.Right;
+        }
+        if (cursor.x == room.xMin)
+        {
+            return directions.Left;
+        }
+        else
+        {
+            throw new System.Exception("Cursor is not on wall");
+        }
+        
+    }
+    directions changeDirection(directions dir)
+    {
+        int newDir = (int)dir;
+        int forbiddenDirection = 0;
+        switch (dir)
+        {
+            case directions.Down:
+                {
+                    forbiddenDirection = (int)directions.Up;
+                    break;
+                }
+            case directions.Up:
+                {
+                    forbiddenDirection = (int)directions.Down;
+                    break;
+                }
+            case directions.Left:
+                {
+                    forbiddenDirection = (int)directions.Right;
+                    break;
+                }
+            case directions.Right:
+                {
+                    forbiddenDirection = (int)directions.Left;
+                    break;
+                }
+        }
+        do
+        {
+            newDir = Random.Range((int)directions.Up, (int)directions.Right);
+        } while (newDir == forbiddenDirection);
+        return (directions)newDir;
+    }
+    Vector2Int MoveCursor(Vector2Int cursor, directions dir)
+    {
+        Vector2Int newCursor = cursor;
+        switch (dir)
+        {
+            case directions.Down:
+                {
+                    newCursor.y--;
+                    break;
+                }
+            case directions.Up:
+                {
+                    newCursor.y++;
+                    break;
+                }
+            case directions.Left:
+                {
+                    newCursor.x--;
+                    break;
+                }
+            case directions.Right:
+                {
+                    newCursor.x++;
+                    break;
+                }
+        }
+        return newCursor;
+    }
+    List<Vector3Int> CreateTunnel(Rect room)
+    {
+        // DODELAT
+        Debug.Log("Connectiong rooms");      
+        directions dir;
+
+        Vector2Int cursor = generateRandomPositionOnWall(room);
+        dir = getTunnelDirectionFromRoom(cursor, room);
         bool connected = false;
-        map.decorations.SetTile(new Vector3Int(cursor.x, cursor.y, 0), tiles[1]);
+        map.structures.SetTile(new Vector3Int(cursor.x, cursor.y, 0), null);
+        int ch_dir = 0;
+        int maxLength = 12;
+        int length = 0;
+        int max_chDirCounter = (int)(Random.value * 5) + 2;
+        Debug.Log(max_chDirCounter);
+        List<Vector3Int> tunnelTiles = new List<Vector3Int>();
         while (!connected)
         {
-            if(map.structures.GetTile(new Vector3Int(cursor.x, cursor.y + 1, 0)) == tiles[2] && map.structures.GetTile(new Vector3Int(cursor.x, cursor.y - 1, 0)) == tiles[2])
+            map.ground.SetTile(new Vector3Int(cursor.x, cursor.y, 0), tiles[3]);
+            tunnelTiles.Add(new Vector3Int(cursor.x, cursor.y, 0));
+            cursor = MoveCursor(cursor, dir);
+            if (map.structures.GetTile(new Vector3Int(cursor.x, cursor.y, 0)) == tiles[2])
             {
-                // start point is verticall wall
-                if (map.ground.GetTile(new Vector3Int(cursor.x + 1, cursor.y, 0)) == tiles[3])
-                    map.decorations.SetTile(new Vector3Int(cursor.x - 1, cursor.y, 0), tiles[1]);
-                else
-                    map.decorations.SetTile(new Vector3Int(cursor.x + 1, cursor.y, 0), tiles[1]);
-            }else if (map.structures.GetTile(new Vector3Int(cursor.x + 1, cursor.y, 0)) == tiles[2] && map.structures.GetTile(new Vector3Int(cursor.x, cursor.y - 1, 0)) == tiles[2])
-            {
-                // start point is horisontal wall
-                if (map.ground.GetTile(new Vector3Int(cursor.x , cursor.y + 1, 0)) == tiles[3])
-                    map.decorations.SetTile(new Vector3Int(cursor.x , cursor.y - 1, 0), tiles[1]);
-                else
-                    map.decorations.SetTile(new Vector3Int(cursor.x, cursor.y + 1, 0), tiles[1]);
+                tunnelTiles.Add(new Vector3Int(cursor.x, cursor.y, 0));
+                map.structures.SetTile(new Vector3Int(cursor.x, cursor.y, 0), null);
+                cursor = MoveCursor(cursor, dir);
+                tunnelTiles.Add(new Vector3Int(cursor.x, cursor.y, 0));
+                map.structures.SetTile(new Vector3Int(cursor.x, cursor.y, 0), null);
+                connected = true;
             }
-            else
+            else if (map.ground.GetTile(new Vector3Int(cursor.x, cursor.y, 0)) == tiles[3])
             {
-                Debug.Log("Ayyy");
+                connected = true;
             }
-            connected = true;
+            if (ch_dir == max_chDirCounter)
+            {
+                Debug.Log("Changing Direction");
+                max_chDirCounter = (int)(Random.value * 5) + 2;
+                dir = changeDirection(dir);
+                ch_dir = 0;
+            }
+            length++;
+            ch_dir++;
+            if (length == maxLength)
+            {
+                map.ground.SetTile(new Vector3Int(cursor.x, cursor.y, 0), tiles[3]);
+                connected = true;
+            }
+        }
+        return tunnelTiles;
+    }
+
+    private void CreateTunnelWalls(List<Vector3Int> tunnelTiles)
+    {
+        foreach(Vector3Int tile in tunnelTiles)
+        {
+            foreach(Vector3Int surrTile in getSurroundingTiles(tile))
+            {
+                if(map.ground.GetTile(surrTile) != tiles[3] && map.structures.GetTile(surrTile) != tiles[2])
+                {
+                    map.structures.SetTile(surrTile, tiles[2]);
+                }
+            }
         }
     }
 
-
-    //{
-    //    List<int> xSharedTiles = new List<int>();
-    //    if(r1.xMin + r1.width < r2.xMin || r2.xMin + r2.width < r1.xMin)
-    //    {
-    //        int lowerBound = (int)(r1.xMin < r2.xMin ? r1.xMin : r2.xMin);
-    //        int maxWidth = (int)(r1.width < r2.width ? r2.width : r1.width);
-    //        for (int xCounter = lowerBound; xCounter < lowerBound + maxWidth; xCounter++)
-    //        {
-    //            if(xCounter >= r1.xMin && xCounter <= r2.xMin || xCounter >= r2.xMin && xCounter <= r1.xMin)
-    //            {
-    //                xSharedTiles.Add(xCounter);
-    //            }
-    //        }
-    //    }
-    //    foreach(int x in xSharedTiles)
-
-    //    //List<int> ySharedTiles = new List<int>();
-    //    //if (r1.yMin + r1.height < r2.yMin || r2.yMin + r2.height < r1.yMin)
-    //    //{
-    //    //    int lowerBound = (int)(r1.yMin < r2.yMin ? r1.yMin : r2.yMin);
-    //    //    int maxHeight = (int)(r1.height < r2.height ? r2.height : r1.width);
-    //    //    for (int yCounter = lowerBound; yCounter < lowerBound + maxHeight; yCounter++)
-    //    //    {
-    //    //        if (yCounter >= r1.yMin && yCounter <= r2.yMin || yCounter >= r2.yMin && yCounter <= r1.yMin)
-    //    //        {
-    //    //            ySharedTiles.Add(yCounter);
-    //    //        }
-    //    //    }
-    //    //}
-    //    //MapHelper.FillRect(map.decorations, new Rect(xSharedTiles[0] + 1, ySharedTiles[0] + 1, xSharedTiles.Count - 2, ySharedTiles.Count -2),tiles[1]);
+    List<Vector3Int> getSurroundingTiles(Vector3Int tile)
+    {
+        List<Vector3Int> listOfTiles = new List<Vector3Int>();
+        listOfTiles.Add(new Vector3Int(tile.x, tile.y + 1, 0));
+        listOfTiles.Add(new Vector3Int(tile.x + 1, tile.y + 1, 0));
+        listOfTiles.Add(new Vector3Int(tile.x + 1, tile.y, 0));
+        listOfTiles.Add(new Vector3Int(tile.x + 1, tile.y - 1, 0));
+        listOfTiles.Add(new Vector3Int(tile.x, tile.y - 1, 0));
+        listOfTiles.Add(new Vector3Int(tile.x - 1, tile.y - 1, 0));
+        listOfTiles.Add(new Vector3Int(tile.x - 1, tile.y, 0));
+        listOfTiles.Add(new Vector3Int(tile.x - 1, tile.y + 1, 0));
+        return listOfTiles;
+    }
 
     public void CreateDungeon(Rect dungeonArea)
     {
@@ -141,10 +277,22 @@ public class StructureGenerator
             if(!overlaps)
             {
                 rooms.Add(newRoom);
-                MapHelper.MakeRoom(map.structures, newRoom, tiles[2]);
+                MapHelper.MakeBox(map.structures, newRoom, tiles[2]);
                 MapHelper.FillRect(map.ground, newRoom, tiles[3]);
             }
         }
-        ConnectRooms(rooms[0]);
+        List<Vector3Int> tunnels = new List<Vector3Int>();
+        foreach(Rect room in rooms)
+        {
+           tunnels.AddRange(CreateTunnel(room));
+           tunnels.AddRange(CreateTunnel(room));
+           tunnels.AddRange(CreateTunnel(room));
+           tunnels.AddRange(CreateTunnel(room));
+           tunnels.AddRange(CreateTunnel(room));
+           tunnels.AddRange(CreateTunnel(room));
+           tunnels.AddRange(CreateTunnel(room));
+        }
+        CreateTunnelWalls(tunnels);
+        
     }
 }
