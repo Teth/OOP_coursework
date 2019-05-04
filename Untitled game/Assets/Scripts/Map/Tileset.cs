@@ -26,19 +26,22 @@ public class Tileset
     protected List<TileBase> indoorGround;
     protected List<TileBase> structures;
 
+    public TileBase GetRandomTile(List<TileBase> tiles, float defectChance = 0)
+    {
+        if(Random.value > defectChance)
+        {
+            int c = Mathf.FloorToInt(Random.value * tiles.Count);
+            return tiles[c];
+        }
+        return tiles[0];
+    }
+
     public Tileset()
     {
         ground = new List<TileBase>();
         indoorGround = new List<TileBase>();
         structures = new List<TileBase>();
     }
-
-    protected TileBase GetRandomTile(List<TileBase> tiles)
-    {
-        int c = Mathf.FloorToInt(Random.value * tiles.Count);
-        return tiles[c];
-    }
-
 }
 
 public class ForestTileset : Tileset, ITileset
@@ -47,10 +50,13 @@ public class ForestTileset : Tileset, ITileset
     {
         ground.Add((TileBase)AssetDatabase.LoadAssetAtPath("Assets/Tiles/ground.asset", typeof(TileBase)));
         ground.Add((TileBase)AssetDatabase.LoadAssetAtPath("Assets/Tiles/ground1.asset", typeof(TileBase)));
+        indoorGround.Add((TileBase)AssetDatabase.LoadAssetAtPath("Assets/Tiles/stone_floor.asset", typeof(TileBase)));
         indoorGround.Add((TileBase)AssetDatabase.LoadAssetAtPath("Assets/Tiles/stone_deco1.asset", typeof(TileBase)));
         indoorGround.Add((TileBase)AssetDatabase.LoadAssetAtPath("Assets/Tiles/stone_deco2.asset", typeof(TileBase)));
         indoorGround.Add((TileBase)AssetDatabase.LoadAssetAtPath("Assets/Tiles/stone_deco3.asset", typeof(TileBase)));
-        indoorGround.Add((TileBase)AssetDatabase.LoadAssetAtPath("Assets/Tiles/stone_floor.asset", typeof(TileBase)));
+        indoorGround.Add((TileBase)AssetDatabase.LoadAssetAtPath("Assets/Tiles/stone_deco4.asset", typeof(TileBase)));
+        indoorGround.Add((TileBase)AssetDatabase.LoadAssetAtPath("Assets/Tiles/stone_deco5.asset", typeof(TileBase)));
+        indoorGround.Add((TileBase)AssetDatabase.LoadAssetAtPath("Assets/Tiles/stone_deco6.asset", typeof(TileBase)));
         structures.Add((TileBase)AssetDatabase.LoadAssetAtPath("Assets/Tiles/stone.asset", typeof(TileBase)));
     }
 
@@ -66,7 +72,7 @@ public class ForestTileset : Tileset, ITileset
 
     public TileBase GetIndoorTile()
     {
-        return GetRandomTile(indoorGround);
+        return GetRandomTile(indoorGround, 0.7f);
     }
 
     public List<TileBase> GetIndoorTiles()

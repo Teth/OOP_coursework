@@ -8,10 +8,13 @@ public class mapGen : MonoBehaviour
 {
     // Start is called before the first frame update
     public int MapSize;
+    EdgeCollider2D edgeCollider;
     void Start()
     {
         DateTime start = DateTime.Now;
 
+        edgeCollider = GetComponent<EdgeCollider2D>();
+        edgeCollider.points = new Vector2[] { new Vector2(-MapSize / 2, -MapSize / 2), new Vector2(-MapSize / 2, MapSize / 2), new Vector2(MapSize / 2, MapSize / 2), new Vector2(MapSize / 2, -MapSize / 2), new Vector2(-MapSize / 2, -MapSize / 2) };
         GameMap map = new GameMap();
 
         map.ground = GetComponentsInChildren<Tilemap>()[0];
