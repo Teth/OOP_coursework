@@ -11,13 +11,20 @@ public class mapGen : MonoBehaviour
     void Start()
     {
         DateTime start = DateTime.Now;
+
         GameMap map = new GameMap();
+
         map.ground = GetComponentsInChildren<Tilemap>()[0];
         map.decorations = GetComponentsInChildren<Tilemap>()[1];
         map.structures = GetComponentsInChildren<Tilemap>()[2];
-        MapBuilder builder = new ForestMapBuilder(MapSize, map);
+
+        TilesetFactory tilesetFactory = new TilesetFactory();
+        ITileset ftileset = tilesetFactory.GetTileset(Locations.Forest);
+
+        MapBuilder builder = new DungonMapBuilder(MapSize, map, ftileset);
         MapGenerator mapGen = new MapGenerator(builder);
         mapGen.Generate();
+
         TimeSpan timeItTook = DateTime.Now - start;
         Debug.Log(String.Format("Map generated, {0}",timeItTook));
     }

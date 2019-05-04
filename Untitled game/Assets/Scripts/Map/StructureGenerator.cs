@@ -6,19 +6,20 @@ using UnityEngine.Tilemaps;
 public class StructureGenerator 
 {
     GameMap map;
-    TileBase[] tiles;
+    ITileset tiles;
 
-    const int dungeonTries = 10000;
+    const int DUNGEON_GENERATE_CYCLE = 10000;
+    const int TUNNELS_FROM_ROOM = 5;
     const int MAX_WIDHT = 18;
     const int MAX_HEIGHT = 18;
     const int MIN_WIDHT = 5;
     const int MIN_HEIGHT = 4;
 
 
-    public StructureGenerator(GameMap map, TileBase[] tiles)
+    public StructureGenerator(GameMap map, ITileset tileset)
     {
         this.map = map;
-        this.tiles = tiles;
+        this.tiles = tileset;
     }
 
     Rect createRandomRectangleInArea(Rect Area)
@@ -30,7 +31,6 @@ public class StructureGenerator
        
         return new Rect((int)(Area.xMin + xpos), (int)(Area.yMin + ypos),width , height);
     }
-
     enum directions
     {
         Up,
@@ -42,19 +42,19 @@ public class StructureGenerator
     {
         List<Vector3Int> list = getSurroundingTiles(tile);
         int corners = 0; 
-        if(map.ground.GetTile(list[1]) == tiles[2])
+        if(tiles.GetIndoorTiles().Contains(map.ground.GetTile(list[1])))
         {
             corners++;
         }
-        if (map.ground.GetTile(list[3]) == tiles[2])
+        if (tiles.GetIndoorTiles().Contains(map.ground.GetTile(list[3])))
         {
             corners++;
         }
-        if (map.ground.GetTile(list[5]) == tiles[2])
+        if (tiles.GetIndoorTiles().Contains(map.ground.GetTile(list[5])))
         {
             corners++;
         }
-        if (map.ground.GetTile(list[7]) == tiles[2])
+        if (tiles.GetIndoorTiles().Contains(map.ground.GetTile(list[7])))
         {
             corners++;
         }
@@ -90,7 +90,6 @@ public class StructureGenerator
         }
         return new Vector2Int(tunPosX, tunPosY);
     }
-
     directions getTunnelDirectionFromRoom(Vector2Int cursor, Rect room)
     {
         if (cursor.y == room.yMax - 1)
@@ -191,53 +190,63 @@ public class StructureGenerator
         List<Vector3Int> tunnelTiles = new List<Vector3Int>();
         while (!connected)
         {
-            map.ground.SetTile(new Vector3Int(cursor.x, cursor.y, 0), tiles[3]);
+            map.ground.SetTile(new Vector3Int(cursor.x, cursor.y, 0), tiles.GetIndoorTile());
+
             tunnelTiles.Add(new Vector3Int(cursor.x, cursor.y, 0));
+
             cursor = MoveCursor(cursor, dir);
-            if (map.structures.GetTile(new Vector3Int(cursor.x, cursor.y, 0)) == tiles[2])
+
+            if (tiles.GetStructureTiles().Contains(map.structures.GetTile(new Vector3Int(cursor.x, cursor.y, 0))))
             {
-                tunnelTiles.Add(new Vector3Int(cursor.x, cursor.y, 0));
-                map.structures.SetTile(new Vector3Int(cursor.x, cursor.y, 0), null);
-                cursor = MoveCursor(cursor, dir);
+                //merge into a room
+                if(isCorner(new Vector3Int(cursor.x, cursor.y, 0)))
+                {
+                    tunnelTiles.Add(new Vector3Int(cursor.x, cursor.y, 0));
+                    map.structures.SetTile(new Vector3Int(cursor.x, cursor.y, 0), null);
+                    cursor = MoveCursor(cursor, dir);
+                }
                 tunnelTiles.Add(new Vector3Int(cursor.x, cursor.y, 0));
                 map.structures.SetTile(new Vector3Int(cursor.x, cursor.y, 0), null);
                 connected = true;
             }
-            else if (map.ground.GetTile(new Vector3Int(cursor.x, cursor.y, 0)) == tiles[3])
+            else if (tiles.GetIndoorTiles().Contains(map.ground.GetTile(new Vector3Int(cursor.x, cursor.y, 0))))
             {
+                //merge into another tunnel
                 connected = true;
             }
+
             if (ch_dir == max_chDirCounter)
             {
+                //random direction change
                 max_chDirCounter = (int)(Random.value * 5) + 2;
                 dir = changeDirection(dir);
                 ch_dir = 0;
             }
             length++;
             ch_dir++;
+
             if (length == maxLength)
             {
-                map.ground.SetTile(new Vector3Int(cursor.x, cursor.y, 0), tiles[3]);
+                // end of tunnel
+                map.ground.SetTile(new Vector3Int(cursor.x, cursor.y, 0), tiles.GetIndoorTile());
                 connected = true;
             }
         }
         return tunnelTiles;
     }
-
     private void CreateTunnelWalls(List<Vector3Int> tunnelTiles)
     {
         foreach(Vector3Int tile in tunnelTiles)
         {
             foreach(Vector3Int surrTile in getSurroundingTiles(tile))
             {
-                if(map.ground.GetTile(surrTile) != tiles[3] && map.structures.GetTile(surrTile) != tiles[2])
+                if(!tiles.GetIndoorTiles().Contains(map.ground.GetTile(surrTile)) && !tiles.GetStructureTiles().Contains(map.structures.GetTile(surrTile)))
                 {
-                    map.structures.SetTile(surrTile, tiles[2]);
+                    map.structures.SetTile(surrTile, tiles.GetStructureTile());
                 }
             }
         }
     }
-
     List<Vector3Int> getSurroundingTiles(Vector3Int tile)
     {
         List<Vector3Int> listOfTiles = new List<Vector3Int>();
@@ -251,39 +260,53 @@ public class StructureGenerator
         listOfTiles.Add(new Vector3Int(tile.x - 1, tile.y + 1, 0));
         return listOfTiles;
     }
-
-    public void CreateDungeon(Rect dungeonArea)
+    List<Rect> getRandomRoomsInArea(Rect area, int tries)
     {
         List<Rect> rooms = new List<Rect>();
-        for(int i = 0; i < dungeonTries; i++)
+        for (int i = 0; i < tries; i++)
         {
-            Rect newRoom = createRandomRectangleInArea(dungeonArea);
+            Rect newRoom = createRandomRectangleInArea(area);
             Rect newRoomPlus1 = new Rect(newRoom);
             newRoomPlus1.yMin -= 1;
             newRoomPlus1.xMin -= 1;
             newRoomPlus1.height += 2;
             newRoomPlus1.width += 2;
             bool overlaps = false;
-            foreach(Rect room in rooms){
+            foreach (Rect room in rooms)
+            {
                 if (!overlaps && newRoomPlus1.Overlaps(room, true))
                 {
                     overlaps = true;
                 }
             }
-            if(!overlaps)
+            if (!overlaps)
             {
                 rooms.Add(newRoom);
-                MapHelper.MakeBox(map.structures, newRoom, tiles[2]);
-                MapHelper.FillRect(map.ground, newRoom, tiles[3]);
             }
         }
+        return rooms;
+    }
+
+    public void CreateDungeon(Rect dungeonArea)
+    {
+
+        List<Rect> rooms = getRandomRoomsInArea(dungeonArea, DUNGEON_GENERATE_CYCLE);
         List<Vector3Int> tunnels = new List<Vector3Int>();
-        foreach(Rect room in rooms)
+        System.Func<ITileset, TileBase> getStructure = tileset => tileset.GetStructureTile();
+        System.Func<ITileset, TileBase> getIndoor = tileset => tileset.GetIndoorTile();
+        foreach (Rect room in rooms)
         {
-           tunnels.AddRange(CreateTunnel(room));
-            tunnels.AddRange(CreateTunnel(room));
-            tunnels.AddRange(CreateTunnel(room));
+            MapHelper.MakeBox(map.structures, room, getStructure, tiles);
+            MapHelper.FillRect(map.ground, room, getIndoor, tiles);
         }
+        foreach (Rect room in rooms)
+        {
+            for (int i = 0; i < TUNNELS_FROM_ROOM; i++)
+            {
+                tunnels.AddRange(CreateTunnel(room));
+            }
+        }
+        Debug.Log("HEY");
         CreateTunnelWalls(tunnels);
         
     }

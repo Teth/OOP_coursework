@@ -12,8 +12,7 @@ public class cameracontroll : MonoBehaviour
 
     void Update()
     {
-        Debug.DrawRay(target.position, transform.position);
-        RaycastHit2D hit = Physics2D.Raycast(target.position, transform.position);
+        
     }
     // Update is called once per frame
     void FixedUpdate()

@@ -17,30 +17,33 @@ public class MapGenerator
     {
         b.BuildGround();
         b.BuildStructures();
+        //b.BuildDecorations();
     }
 
 }
 
-public class ForestMapBuilder : MapBuilder
+public class DungonMapBuilder : MapBuilder
 {
-    public ForestMapBuilder(int size, GameMap map) : base(size, map)
+    public DungonMapBuilder(int size, GameMap map, ITileset tileset) : base(size, map, tileset)
     {
-        setTiles(MapHelper.GetForestTileset());
+        
     }
-    public override void BuildDecorations(float fossilRate)
+
+    public override void BuildDecorations()
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 
     public override void BuildGround()
     {
         Rect mapArea = new Rect(-size / 2, -size / 2, size, size);
-        MapHelper.FillRect(map.ground, mapArea, tiles[0]);
+        Func<ITileset, TileBase> getGround = tileset => tileset.GetGroundTile();
+        MapHelper.FillRect(map.ground, mapArea, getGround, tileset);
     }
 
     public override void BuildStructures()
     {
-        StructureGenerator gen = new StructureGenerator(map, tiles);
+        StructureGenerator gen = new StructureGenerator(map, tileset);
         gen.CreateDungeon(new Rect(-size / 4, -size / 4, size/2, size/2));
     }
 }
@@ -48,14 +51,15 @@ public class ForestMapBuilder : MapBuilder
 public abstract class MapBuilder
 {
     protected TileBase[] tiles;
+    protected ITileset tileset;
     protected GameMap map;
     protected int size;
 
-    protected MapBuilder(int size, GameMap map)
+    protected MapBuilder(int size, GameMap map, ITileset tileset)
     {
         this.size = size;
         this.map = map;
-        
+        this.tileset = tileset;
     }
     public void setTiles(TileBase[] tiles)
     {
@@ -63,7 +67,7 @@ public abstract class MapBuilder
     }
     
     public abstract void BuildGround();
-    public abstract void BuildDecorations(float fossilRate);
+    public abstract void BuildDecorations();
     public abstract void BuildStructures();
 }
 
