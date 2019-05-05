@@ -11,6 +11,7 @@ public class TilesetFactory
     {
         tilesets.Add(Locations.Forest, new ForestTileset());
         tilesets.Add(Locations.Desert, new DesertTileset());
+        tilesets.Add(Locations.Village, new VillageTileset());
     }
 
     public ITileset GetTileset(Locations key)

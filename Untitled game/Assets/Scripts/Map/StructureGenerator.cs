@@ -306,8 +306,20 @@ public class StructureGenerator
                 tunnels.AddRange(CreateTunnel(room));
             }
         }
-        Debug.Log("HEY");
         CreateTunnelWalls(tunnels);
         
+    }
+
+    public void CreateVillage(Rect area)
+    {
+        List<Rect> rooms = getRandomRoomsInArea(area, DUNGEON_GENERATE_CYCLE);
+        List<Vector3Int> tunnels = new List<Vector3Int>();
+        System.Func<ITileset, TileBase> getStructure = tileset => tileset.GetStructureTile();
+        System.Func<ITileset, TileBase> getIndoor = tileset => tileset.GetIndoorTile();
+        foreach (Rect room in rooms)
+        {
+            MapHelper.MakeRoom(map.structures, room, getStructure, tiles);
+            MapHelper.FillRect(map.ground, room, getIndoor, tiles);
+        }
     }
 }

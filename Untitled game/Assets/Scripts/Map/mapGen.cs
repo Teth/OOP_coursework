@@ -7,15 +7,16 @@ using UnityEngine.Tilemaps;
 public class mapGen : MonoBehaviour
 {
     // Start is called before the first frame update
-    public int MapSize;
+    int MapSizeX = 60;
+    int MapSizeY = 100;
     EdgeCollider2D edgeCollider;
     void Start()
     {
         DateTime start = DateTime.Now;
 
         edgeCollider = GetComponent<EdgeCollider2D>();
-        edgeCollider.points = new Vector2[] { new Vector2(-MapSize / 2, -MapSize / 2), new Vector2(-MapSize / 2, MapSize / 2), new Vector2(MapSize / 2, MapSize / 2), new Vector2(MapSize / 2, -MapSize / 2), new Vector2(-MapSize / 2, -MapSize / 2) };
-        GameMap map = new GameMap();
+        edgeCollider.points = new Vector2[] { new Vector2(-MapSizeX / 2, -MapSizeY / 2), new Vector2(-MapSizeX / 2, MapSizeY / 2), new Vector2(MapSizeX / 2, MapSizeY / 2), new Vector2(MapSizeX / 2, -MapSizeY / 2), new Vector2(-MapSizeX / 2, -MapSizeY / 2) };
+        GameMap map = new GameMap(MapSizeX, MapSizeY);
 
         map.ground = GetComponentsInChildren<Tilemap>()[0];
         map.decorations = GetComponentsInChildren<Tilemap>()[1];
@@ -23,8 +24,12 @@ public class mapGen : MonoBehaviour
 
         TilesetFactory tilesetFactory = new TilesetFactory();
         ITileset ftileset = tilesetFactory.GetTileset(Locations.Forest);
+        //ITileset vtileset = tilesetFactory.GetTileset(Locations.Village);
+        //ITileset dtileset = tilesetFactory.GetTileset(Locations.Desert);
 
-        MapBuilder builder = new DungonMapBuilder(MapSize, map, ftileset);
+        //MapBuilder builder = new DungonMapBuilder(new Rect(-MapSizeX / 2, -MapSizeY / 2, MapSizeX, MapSizeY), map, ftileset);
+        MapBuilder builder = new DungonMapBuilder(new Rect(-MapSizeX / 2, -MapSizeY / 2, MapSizeX, MapSizeY), map, ftileset);
+
         MapGenerator mapGen = new MapGenerator(builder);
         mapGen.Generate();
 
