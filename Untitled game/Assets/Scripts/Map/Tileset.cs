@@ -31,18 +31,22 @@ public class Tileset
     {
         this._tileset = tileset;
     }
+
     public void SetTileset(ITileset tileset)
     {
         this._tileset = tileset;
     }
+
     public TileBase GetGroundTile()
     {
         return _tileset.GetGroundTile();
     }
+
     public TileBase GetIndoorTile()
     {
         return _tileset.GetIndoorTile();
     }
+
     public TileBase GetStructureTile()
     {
         return _tileset.GetStructureTile();

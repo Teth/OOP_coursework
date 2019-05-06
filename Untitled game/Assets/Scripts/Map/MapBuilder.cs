@@ -39,17 +39,20 @@ public class DungonMapBuilder : MapBuilder
     public override void BuildGround()
     {
         System.Func<Tileset, TileBase> getGround = tileset => tileset.GetGroundTile();
-        MapHelper.FillRect(map.ground, area, getGround, tileset);
-        MapHelper.GenerateFadeout(map.ground, area, getGround, tileset, Mathf.CeilToInt((area.height + area.width)/16));
+        TilemapModifier mapOperations = new TilemapModifier(map.ground);
+
+        mapOperations.FillRect(area, getGround, tileset);
+        mapOperations.GenerateFadeout(area, getGround, tileset, Mathf.CeilToInt((area.height + area.width)/16));
     }
 
     public override void BuildStructures()
     {
         StructureGenerator gen = new StructureGenerator(map, tileset);
         int numberOfDungeons = (int)(Random.value * (MAX_DUNGEONS - 1)) + 1;
+        RandomRectangleConstructor rectConstr = new RandomRectangleConstructor(new Vector2Int((int)area.width / 3, (int)area.height / 3), new Vector2Int((int)(area.width / 1.2), (int)(area.height / 1.2)));
         for (int i = 0; i < numberOfDungeons; i++)
         {
-            gen.CreateDungeon(MapHelper.createRandomRectangleInArea(area, new Vector2Int((int)area.width/3, (int)area.height/3), new Vector2Int((int)(area.width/1.2), (int)(area.height/1.2))));
+            gen.CreateDungeon(rectConstr.CreateRandomRectangleInArea(area));
         }
     }
 }
@@ -69,15 +72,19 @@ public class VillageMapBuilder : MapBuilder
 
     public override void BuildGround()
     {
+        TilemapModifier mapOperations = new TilemapModifier(map.ground);
+
         System.Func<Tileset, TileBase> getGround = tileset => tileset.GetGroundTile();
-        MapHelper.FillRect(map.ground, area, getGround, tileset);
-        MapHelper.GenerateFadeout(map.ground, area, getGround, tileset, (int)((area.width + area.height) / 16));
+
+        mapOperations.FillRect(area, getGround, tileset);
+        mapOperations.GenerateFadeout(area, getGround, tileset, (int)((area.width + area.height) / 16));
     }
 
     public override void BuildStructures()
     {
         StructureGenerator gen = new StructureGenerator(map, tileset);
-        gen.CreateVillage(MapHelper.createRandomRectangleInArea(area, new Vector2Int((int)area.width / 2, (int)area.height / 2), new Vector2Int((int)(area.width / 1.2), (int)(area.height / 1.2))));
+        RandomRectangleConstructor rectConstr = new RandomRectangleConstructor(new Vector2Int((int)area.width / 2, (int)area.height / 2), new Vector2Int((int)(area.width / 1.2), (int)(area.height / 1.2)));
+        gen.CreateVillage(rectConstr.CreateRandomRectangleInArea(area));
     }
 }
 
