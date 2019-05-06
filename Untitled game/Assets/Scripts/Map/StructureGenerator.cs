@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
+// FACADE pattern
+
 public class StructureGenerator 
 {
     GameMap map;
@@ -19,6 +21,7 @@ public class StructureGenerator
     protected TilemapModifier structuresModifier;
     protected RandomRectangleConstructor roomRectangleConstructor;
     protected MapOperations mapOperations;
+
     public StructureGenerator(GameMap map, Tileset tileset)
     {
         this.map = map;
@@ -130,5 +133,10 @@ public class StructureGenerator
             structuresModifier.MakeRoom(room, getStructure, tiles);
             groundModifier.FillRect(room, getIndoor, tiles);
         }
+    }
+
+    public void CreateRuins(Rect area)
+    {
+
     }
 }
