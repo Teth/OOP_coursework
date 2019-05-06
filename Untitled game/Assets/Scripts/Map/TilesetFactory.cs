@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+// FACTORY pattern
 
 public class TilesetFactory
 {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEditor;
+// BUILDER pattern
 
 public class MapGenerator
 {
@@ -25,7 +26,7 @@ public class DungonMapBuilder : MapBuilder
 {
     int MAX_DUNGEONS = 2;
 
-    public DungonMapBuilder(Rect area, GameMap map, ITileset tileset) : base(area, map, tileset)
+    public DungonMapBuilder(Rect area, GameMap map, Tileset tileset) : base(area, map, tileset)
     {
        
     }
@@ -37,7 +38,7 @@ public class DungonMapBuilder : MapBuilder
 
     public override void BuildGround()
     {
-        System.Func<ITileset, TileBase> getGround = tileset => tileset.GetGroundTile();
+        System.Func<Tileset, TileBase> getGround = tileset => tileset.GetGroundTile();
         MapHelper.FillRect(map.ground, area, getGround, tileset);
         MapHelper.GenerateFadeout(map.ground, area, getGround, tileset, Mathf.CeilToInt((area.height + area.width)/16));
     }
@@ -48,18 +49,17 @@ public class DungonMapBuilder : MapBuilder
         int numberOfDungeons = (int)(Random.value * (MAX_DUNGEONS - 1)) + 1;
         for (int i = 0; i < numberOfDungeons; i++)
         {
-            gen.CreateDungeon(MapHelper.createRandomRectangleInArea(area, new Vector2Int((int)area.width/3, (int)area.height/3), new Vector2Int((int)area.width/2, (int)area.height/2)));
+            gen.CreateDungeon(MapHelper.createRandomRectangleInArea(area, new Vector2Int((int)area.width/3, (int)area.height/3), new Vector2Int((int)(area.width/1.2), (int)(area.height/1.2))));
         }
     }
 }
 
 public class VillageMapBuilder : MapBuilder
-{
-    int MAX_DUNGEONS = 2;
+{ 
 
-    public VillageMapBuilder(Rect area, GameMap map, ITileset tileset) : base(area, map, tileset)
+    public VillageMapBuilder(Rect area, GameMap map) : base(area, map, null)
     {
-
+        tileset = new Tileset(new TilesetFactory().GetTileset(Locations.Village));
     }
 
     public override void BuildDecorations()
@@ -69,7 +69,7 @@ public class VillageMapBuilder : MapBuilder
 
     public override void BuildGround()
     {
-        System.Func<ITileset, TileBase> getGround = tileset => tileset.GetGroundTile();
+        System.Func<Tileset, TileBase> getGround = tileset => tileset.GetGroundTile();
         MapHelper.FillRect(map.ground, area, getGround, tileset);
         MapHelper.GenerateFadeout(map.ground, area, getGround, tileset, (int)((area.width + area.height) / 16));
     }
@@ -83,11 +83,11 @@ public class VillageMapBuilder : MapBuilder
 
 public abstract class MapBuilder
 {
-    protected ITileset tileset;
+    protected Tileset tileset;
     protected GameMap map;
     protected Rect area;
 
-    protected MapBuilder(Rect area, GameMap map, ITileset tileset)
+    protected MapBuilder(Rect area, GameMap map, Tileset tileset)
     {
         this.area = area;
         this.map = map;

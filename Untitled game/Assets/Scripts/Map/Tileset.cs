@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-
+// Bridge pattern
 public enum Locations
 {
     Forest,
@@ -11,6 +11,7 @@ public enum Locations
     Village
 }
 
+//Interface
 public interface ITileset
 {
     TileBase GetGroundTile();
@@ -21,49 +22,77 @@ public interface ITileset
     List<TileBase> GetStructureTiles();
 }
 
+//Abstraction
 public class Tileset
+{
+    private ITileset _tileset;
+
+    public Tileset(ITileset tileset)
+    {
+        this._tileset = tileset;
+    }
+    public void SetTileset(ITileset tileset)
+    {
+        this._tileset = tileset;
+    }
+    public TileBase GetGroundTile()
+    {
+        return _tileset.GetGroundTile();
+    }
+    public TileBase GetIndoorTile()
+    {
+        return _tileset.GetIndoorTile();
+    }
+    public TileBase GetStructureTile()
+    {
+        return _tileset.GetStructureTile();
+    }
+
+    public List<TileBase> GetIndoorTiles()
+    {
+        return _tileset.GetIndoorTiles();
+    }
+
+    public List<TileBase> GetGroundTiles()
+    {
+        return _tileset.GetGroundTiles();
+    }
+
+    public List<TileBase> GetStructureTiles()
+    {
+        return _tileset.GetStructureTiles();
+    }
+
+}
+
+//Implimentation
+public class ForestTileset : ITileset
 {
     protected List<TileBase> ground;
     protected List<TileBase> indoorGround;
     protected List<TileBase> structures;
 
-    public TileBase GetRandomTile(List<TileBase> tiles, float defectChance = 0)
-    {
-        if(Random.value > defectChance)
-        {
-            int c = Mathf.FloorToInt(Random.value * tiles.Count);
-            return tiles[c];
-        }
-        return tiles[0];
-    }
-
-    public Tileset()
+    public ForestTileset()
     {
         ground = new List<TileBase>();
         indoorGround = new List<TileBase>();
         structures = new List<TileBase>();
-    }
-}
-
-public class ForestTileset : Tileset, ITileset
-{
-    public ForestTileset()
-    {
-        ground.Add((TileBase)AssetDatabase.LoadAssetAtPath("Assets/Tiles/Shared/ground.asset", typeof(TileBase)));
-        ground.Add((TileBase)AssetDatabase.LoadAssetAtPath("Assets/Tiles/Shared/ground1.asset", typeof(TileBase)));
-        indoorGround.Add((TileBase)AssetDatabase.LoadAssetAtPath("Assets/Tiles/Forest/stone_floor.asset", typeof(TileBase)));
-        indoorGround.Add((TileBase)AssetDatabase.LoadAssetAtPath("Assets/Tiles/Forest/stone_deco1.asset", typeof(TileBase)));
-        indoorGround.Add((TileBase)AssetDatabase.LoadAssetAtPath("Assets/Tiles/Forest/stone_deco2.asset", typeof(TileBase)));
-        indoorGround.Add((TileBase)AssetDatabase.LoadAssetAtPath("Assets/Tiles/Forest/stone_deco3.asset", typeof(TileBase)));
-        indoorGround.Add((TileBase)AssetDatabase.LoadAssetAtPath("Assets/Tiles/Forest/stone_deco4.asset", typeof(TileBase)));
-        indoorGround.Add((TileBase)AssetDatabase.LoadAssetAtPath("Assets/Tiles/Forest/stone_deco5.asset", typeof(TileBase)));
-        indoorGround.Add((TileBase)AssetDatabase.LoadAssetAtPath("Assets/Tiles/Forest/stone_deco6.asset", typeof(TileBase)));
-        structures.Add((TileBase)AssetDatabase.LoadAssetAtPath("Assets/Tiles/Forest/stone.asset", typeof(TileBase)));
+        AssetProxy tileProxy = new AssetProxy(typeof(TileBase));
+        ground.Add(tileProxy.LoadAsset("Assets/Tiles/Shared/ground.asset"));
+        ground.Add(tileProxy.LoadAsset("Assets/Tiles/Shared/ground1.asset"));
+        indoorGround.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/stone_floor.asset"));
+        indoorGround.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/stone_deco1.asset"));
+        indoorGround.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/stone_deco2.asset"));
+        indoorGround.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/stone_deco3.asset"));
+        indoorGround.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/stone_deco4.asset"));
+        indoorGround.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/stone_deco5.asset"));
+        indoorGround.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/stone_deco6.asset"));
+        structures.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/stone.asset"));
     }
 
     public TileBase GetGroundTile()
     {
-        return GetRandomTile(ground);
+        return MapHelper.GetRandomTile(ground);
     }
 
     public List<TileBase> GetGroundTiles()
@@ -73,7 +102,7 @@ public class ForestTileset : Tileset, ITileset
 
     public TileBase GetIndoorTile()
     {
-        return GetRandomTile(indoorGround, 0.7f);
+        return MapHelper.GetRandomTile(indoorGround, 0.7f);
     }
 
     public List<TileBase> GetIndoorTiles()
@@ -83,7 +112,7 @@ public class ForestTileset : Tileset, ITileset
 
     public TileBase GetStructureTile()
     {
-        return GetRandomTile(structures);
+        return MapHelper.GetRandomTile(structures);
     }
 
     public List<TileBase> GetStructureTiles()
@@ -92,27 +121,36 @@ public class ForestTileset : Tileset, ITileset
     }
 }
 
-public class DesertTileset : Tileset, ITileset
+//Implimentation
+public class DesertTileset : ITileset
 {
+    protected List<TileBase> ground;
+    protected List<TileBase> indoorGround;
+    protected List<TileBase> structures;
+
     public DesertTileset()
     {
-        ground.Add((TileBase)AssetDatabase.LoadAssetAtPath("Assets/Tiles/Desert/desert.asset", typeof(TileBase)));
-        ground.Add((TileBase)AssetDatabase.LoadAssetAtPath("Assets/Tiles/Desert/desert2.asset", typeof(TileBase)));
-        ground.Add((TileBase)AssetDatabase.LoadAssetAtPath("Assets/Tiles/Desert/desert3.asset", typeof(TileBase)));
-        indoorGround.Add((TileBase)AssetDatabase.LoadAssetAtPath("Assets/Tiles/Forest/stone_floor.asset", typeof(TileBase)));
-        indoorGround.Add((TileBase)AssetDatabase.LoadAssetAtPath("Assets/Tiles/Forest/stone_deco1.asset", typeof(TileBase)));
-        indoorGround.Add((TileBase)AssetDatabase.LoadAssetAtPath("Assets/Tiles/Forest/stone_deco2.asset", typeof(TileBase)));
-        indoorGround.Add((TileBase)AssetDatabase.LoadAssetAtPath("Assets/Tiles/Forest/stone_deco3.asset", typeof(TileBase)));
-        indoorGround.Add((TileBase)AssetDatabase.LoadAssetAtPath("Assets/Tiles/Forest/stone_deco4.asset", typeof(TileBase)));
-        indoorGround.Add((TileBase)AssetDatabase.LoadAssetAtPath("Assets/Tiles/Forest/stone_deco5.asset", typeof(TileBase)));
-        indoorGround.Add((TileBase)AssetDatabase.LoadAssetAtPath("Assets/Tiles/Forest/stone_deco6.asset", typeof(TileBase)));
-        structures.Add((TileBase)AssetDatabase.LoadAssetAtPath("Assets/Tiles/Forest/stone.asset", typeof(TileBase)));
+        ground = new List<TileBase>();
+        indoorGround = new List<TileBase>();
+        structures = new List<TileBase>();
+        AssetProxy tileProxy = new AssetProxy(typeof(TileBase));
+        ground.Add(tileProxy.LoadAsset("Assets/Tiles/Desert/desert.asset"));
+        ground.Add(tileProxy.LoadAsset("Assets/Tiles/Desert/desert2.asset"));
+        ground.Add(tileProxy.LoadAsset("Assets/Tiles/Desert/desert3.asset"));
+        indoorGround.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/stone_floor.asset"));
+        indoorGround.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/stone_deco1.asset"));
+        indoorGround.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/stone_deco2.asset"));
+        indoorGround.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/stone_deco3.asset"));
+        indoorGround.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/stone_deco4.asset"));
+        indoorGround.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/stone_deco5.asset"));
+        indoorGround.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/stone_deco6.asset"));
+        structures.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/stone.asset"));
 
     }
 
     public TileBase GetGroundTile()
     {
-        return GetRandomTile(ground);
+        return MapHelper.GetRandomTile(ground);
     }
 
     public List<TileBase> GetGroundTiles()
@@ -122,7 +160,7 @@ public class DesertTileset : Tileset, ITileset
 
     public TileBase GetIndoorTile()
     {
-        return GetRandomTile(indoorGround, 0.7f);
+        return MapHelper.GetRandomTile(indoorGround, 0.7f);
     }
 
     public List<TileBase> GetIndoorTiles()
@@ -132,7 +170,7 @@ public class DesertTileset : Tileset, ITileset
 
     public TileBase GetStructureTile()
     {
-        return GetRandomTile(structures);
+        return MapHelper.GetRandomTile(structures);
     }
 
     public List<TileBase> GetStructureTiles()
@@ -141,19 +179,28 @@ public class DesertTileset : Tileset, ITileset
     }
 }
 
-public class VillageTileset : Tileset, ITileset
+//Implimentation
+public class VillageTileset : ITileset
 {
+    protected List<TileBase> ground;
+    protected List<TileBase> indoorGround;
+    protected List<TileBase> structures;
+
     public VillageTileset()
     {
-        ground.Add((TileBase)AssetDatabase.LoadAssetAtPath("Assets/Tiles/Shared/ground.asset", typeof(TileBase)));
-        ground.Add((TileBase)AssetDatabase.LoadAssetAtPath("Assets/Tiles/Shared/ground1.asset", typeof(TileBase)));
-        indoorGround.Add((TileBase)AssetDatabase.LoadAssetAtPath("Assets/Tiles/Village/village_floor.asset", typeof(TileBase)));
-        structures.Add((TileBase)AssetDatabase.LoadAssetAtPath("Assets/Tiles/Village/village_wall.asset", typeof(TileBase)));
+        ground = new List<TileBase>();
+        indoorGround = new List<TileBase>();
+        structures = new List<TileBase>();
+        AssetProxy tileProxy = new AssetProxy(typeof(TileBase));
+        ground.Add(tileProxy.LoadAsset("Assets/Tiles/Shared/ground.asset"));
+        ground.Add(tileProxy.LoadAsset("Assets/Tiles/Shared/ground1.asset"));
+        indoorGround.Add(tileProxy.LoadAsset("Assets/Tiles/Village/village_floor.asset"));
+        structures.Add(tileProxy.LoadAsset("Assets/Tiles/Village/village_wall.asset"));
     }
 
     public TileBase GetGroundTile()
     {
-        return GetRandomTile(ground);
+        return MapHelper.GetRandomTile(ground);
     }
 
     public List<TileBase> GetGroundTiles()
@@ -163,7 +210,7 @@ public class VillageTileset : Tileset, ITileset
 
     public TileBase GetIndoorTile()
     {
-        return GetRandomTile(indoorGround);
+        return MapHelper.GetRandomTile(indoorGround);
     }
 
     public List<TileBase> GetIndoorTiles()
@@ -173,7 +220,7 @@ public class VillageTileset : Tileset, ITileset
 
     public TileBase GetStructureTile()
     {
-        return GetRandomTile(structures);
+        return MapHelper.GetRandomTile(structures);
     }
 
     public List<TileBase> GetStructureTiles()

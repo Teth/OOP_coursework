@@ -4,6 +4,15 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
+enum Directions
+{
+    Up,
+    Down,
+    Left,
+    Right
+}
+
+
 public static class MapHelper
 {
     public static Tilemap MakeBox(Tilemap target, Rect rect, TileBase tile, float fillPerc = 1)
@@ -23,11 +32,10 @@ public static class MapHelper
         return target;
     }
 
-    public static Tilemap MakeBox(Tilemap target, Rect rect, System.Func<ITileset, TileBase> func, ITileset tileset, float fillPerc = 1)
+    public static Tilemap MakeBox(Tilemap target, Rect rect, System.Func<Tileset, TileBase> func, Tileset tileset, float fillPerc = 1)
     {
         int width = (int)(rect.width);
         int height = (int)(rect.height);
-        Debug.Log(fillPerc);
         for (int counter_width = 0; counter_width < width; counter_width++)
         {
             for (int counter_height = 0; counter_height < height; counter_height++)
@@ -45,7 +53,7 @@ public static class MapHelper
         return target;
     }
 
-    public static Tilemap MakeRoom(Tilemap target, Rect rect, System.Func<ITileset, TileBase> func, ITileset tileset, float fillPerc = 1)
+    public static Tilemap MakeRoom(Tilemap target, Rect rect, System.Func<Tileset, TileBase> func, Tileset tileset, float fillPerc = 1)
     {
         int width = (int)(rect.width);
         int height = (int)(rect.height);
@@ -89,7 +97,7 @@ public static class MapHelper
         return target;
     }
 
-    public static void GenerateFadeout(Tilemap ground, Rect area, System.Func<ITileset, TileBase> getGround, ITileset tileset, int fadeoutCycles)
+    public static void GenerateFadeout(Tilemap target, Rect area, System.Func<Tileset, TileBase> getGround, Tileset tileset, int fadeoutCycles)
     {
         Rect fadeoutRect = new Rect(area);
         float randStep = 1 / (float)fadeoutCycles;
@@ -99,13 +107,12 @@ public static class MapHelper
             fadeoutRect.y--;
             fadeoutRect.width += 2;
             fadeoutRect.height += 2;
-            Debug.Log(fadeoutRect.ToString());
             float thisCycleChance = 1 - randStep * (i + 1);
-            MakeBox(ground, fadeoutRect, getGround, tileset, thisCycleChance);
+            MakeBox(target, fadeoutRect, getGround, tileset, thisCycleChance);
         }
     }
 
-    public static void FillRect(Tilemap target, Rect rect, System.Func<ITileset, TileBase> func, ITileset tileset, float fillPerc = 1)
+    public static void FillRect(Tilemap target, Rect rect, System.Func<Tileset, TileBase> func, Tileset tileset, float fillPerc = 1)
     {
         int width = (int)(rect.width);
         int height = (int)(rect.height);
@@ -165,5 +172,15 @@ public static class MapHelper
         int xpos = (int)((Area.width - width) * Random.value);
 
         return new Rect((int)(Area.xMin + xpos), (int)(Area.yMin + ypos), width, height);
+    }
+
+    public static TileBase GetRandomTile(List<TileBase> tiles, float defectChance = 0)
+    {
+        if (Random.value > defectChance)
+        {
+            int c = Mathf.FloorToInt(Random.value * tiles.Count);
+            return tiles[c];
+        }
+        return tiles[0];
     }
 }

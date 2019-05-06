@@ -6,7 +6,7 @@ using UnityEngine.Tilemaps;
 public class StructureGenerator 
 {
     GameMap map;
-    ITileset tiles;
+    Tileset tiles;
 
     const int DUNGEON_GENERATE_CYCLE = 10000;
     const int TUNNELS_FROM_ROOM = 5;
@@ -16,13 +16,18 @@ public class StructureGenerator
     const int MIN_HEIGHT = 4;
 
 
-    public StructureGenerator(GameMap map, ITileset tileset)
+    public StructureGenerator(GameMap map, Tileset tileset)
     {
         this.map = map;
         this.tiles = tileset;
     }
 
-    Rect createRandomRectangleInArea(Rect Area)
+
+    Vector3Int GetVector3FromVector2(Vector2Int vector)
+    {
+        return new Vector3Int(vector.x, vector.y, 0);
+    }
+    Rect CreateRandomRectangleInArea(Rect Area)
     {
         int width = (int)((MAX_WIDHT - MIN_WIDHT) * Random.value + MIN_WIDHT);
         int height = (int)((MAX_HEIGHT - MIN_HEIGHT) * Random.value + MIN_HEIGHT);
@@ -31,16 +36,9 @@ public class StructureGenerator
        
         return new Rect((int)(Area.xMin + xpos), (int)(Area.yMin + ypos),width , height);
     }
-    enum directions
+    bool IsCorner(Vector3Int tile)
     {
-        Up,
-        Down,
-        Left,
-        Right
-    }
-    bool isCorner(Vector3Int tile)
-    {
-        List<Vector3Int> list = getSurroundingTiles(tile);
+        List<Vector3Int> list = GetSurroundingTiles(tile);
         int corners = 0; 
         if(tiles.GetIndoorTiles().Contains(map.ground.GetTile(list[1])))
         {
@@ -60,7 +58,7 @@ public class StructureGenerator
         }
         return corners == 1;
     }
-    Vector2Int generateRandomPositionOnWall(Rect r1)
+    Vector2Int GenerateRandomPositionOnBorder(Rect r1)
     {
         int tunPosX = (int)((r1.width - 2) * Random.value) + 1;
         int tunPosY = (int)((r1.height - 2) * Random.value) + 1;
@@ -90,23 +88,23 @@ public class StructureGenerator
         }
         return new Vector2Int(tunPosX, tunPosY);
     }
-    directions getTunnelDirectionFromRoom(Vector2Int cursor, Rect room)
+    Directions GetTunnelDirectionFromRoom(Vector3Int cursor, Rect room)
     {
         if (cursor.y == room.yMax - 1)
         {
-            return directions.Up;
+            return Directions.Up;
         }
         if (cursor.y == room.yMin)
         {
-            return directions.Down;
+            return Directions.Down;
         }
         if (cursor.x == room.xMax - 1)
         {
-            return directions.Right;
+            return Directions.Right;
         }
         if (cursor.x == room.xMin)
         {
-            return directions.Left;
+            return Directions.Left;
         }
         else
         {
@@ -114,60 +112,60 @@ public class StructureGenerator
         }
         
     }
-    directions changeDirection(directions dir)
+    Directions ChangeDirection(Directions dir)
     {
         int newDir = (int)dir;
         int forbiddenDirection = 0;
         switch (dir)
         {
-            case directions.Down:
+            case Directions.Down:
                 {
-                    forbiddenDirection = (int)directions.Up;
+                    forbiddenDirection = (int)Directions.Up;
                     break;
                 }
-            case directions.Up:
+            case Directions.Up:
                 {
-                    forbiddenDirection = (int)directions.Down;
+                    forbiddenDirection = (int)Directions.Down;
                     break;
                 }
-            case directions.Left:
+            case Directions.Left:
                 {
-                    forbiddenDirection = (int)directions.Right;
+                    forbiddenDirection = (int)Directions.Right;
                     break;
                 }
-            case directions.Right:
+            case Directions.Right:
                 {
-                    forbiddenDirection = (int)directions.Left;
+                    forbiddenDirection = (int)Directions.Left;
                     break;
                 }
         }
         do
         {
-            newDir = Random.Range((int)directions.Up, (int)directions.Right);
+            newDir = Random.Range((int)Directions.Up, (int)Directions.Right);
         } while (newDir == forbiddenDirection);
-        return (directions)newDir;
+        return (Directions)newDir;
     }
-    Vector2Int MoveCursor(Vector2Int cursor, directions dir)
+    Vector3Int MoveCursor(Vector3Int cursor, Directions dir)
     {
-        Vector2Int newCursor = cursor;
+        Vector3Int newCursor = cursor;
         switch (dir)
         {
-            case directions.Down:
+            case Directions.Down:
                 {
                     newCursor.y--;
                     break;
                 }
-            case directions.Up:
+            case Directions.Up:
                 {
                     newCursor.y++;
                     break;
                 }
-            case directions.Left:
+            case Directions.Left:
                 {
                     newCursor.x--;
                     break;
                 }
-            case directions.Right:
+            case Directions.Right:
                 {
                     newCursor.x++;
                     break;
@@ -176,54 +174,55 @@ public class StructureGenerator
         return newCursor;
     }
     List<Vector3Int> CreateTunnel(Rect room)
-    {    
-        directions dir;
-
-        Vector2Int cursor = generateRandomPositionOnWall(room);
-        dir = getTunnelDirectionFromRoom(cursor, room);
+    {
         bool connected = false;
-        map.structures.SetTile(new Vector3Int(cursor.x, cursor.y, 0), null);
-        int ch_dir = 0;
+        int changeDirectionCounter = 0;
         int maxLength = 12;
         int length = 0;
-        int max_chDirCounter = (int)(Random.value * 5) + 2;
+        int lengthBeforeChangingDirection = (int)(Random.value * 5) + 2;
+
+
+        Directions dir;
+        Vector3Int cursor = GetVector3FromVector2(GenerateRandomPositionOnBorder(room));
+        dir = GetTunnelDirectionFromRoom(cursor, room);
+        map.structures.SetTile(new Vector3Int(cursor.x, cursor.y, 0), null);
+        
         List<Vector3Int> tunnelTiles = new List<Vector3Int>();
         while (!connected)
         {
-            map.ground.SetTile(new Vector3Int(cursor.x, cursor.y, 0), tiles.GetIndoorTile());
-
-            tunnelTiles.Add(new Vector3Int(cursor.x, cursor.y, 0));
-
+            map.ground.SetTile(cursor, tiles.GetIndoorTile());
+            tunnelTiles.Add(cursor);
             cursor = MoveCursor(cursor, dir);
 
-            if (tiles.GetStructureTiles().Contains(map.structures.GetTile(new Vector3Int(cursor.x, cursor.y, 0))))
+            if (tiles.GetStructureTiles().Contains(map.structures.GetTile(cursor)))
             {
                 //merge into a room
-                if(isCorner(new Vector3Int(cursor.x, cursor.y, 0)))
+                //clears a block to enter the rooom
+                if(IsCorner(new Vector3Int(cursor.x, cursor.y, 0)))
                 {
-                    tunnelTiles.Add(new Vector3Int(cursor.x, cursor.y, 0));
-                    map.structures.SetTile(new Vector3Int(cursor.x, cursor.y, 0), null);
+                    //Extends 1 block to reach room
+                    tunnelTiles.Add(cursor);
+                    map.structures.SetTile(cursor, null);
                     cursor = MoveCursor(cursor, dir);
                 }
-                tunnelTiles.Add(new Vector3Int(cursor.x, cursor.y, 0));
-                map.structures.SetTile(new Vector3Int(cursor.x, cursor.y, 0), null);
+                tunnelTiles.Add(cursor);
+                map.structures.SetTile(cursor, null);
                 connected = true;
             }
-            else if (tiles.GetIndoorTiles().Contains(map.ground.GetTile(new Vector3Int(cursor.x, cursor.y, 0))))
+            else if (tiles.GetIndoorTiles().Contains(map.ground.GetTile(cursor)))
             {
                 //merge into another tunnel
                 connected = true;
             }
-
-            if (ch_dir == max_chDirCounter)
+            if (changeDirectionCounter == lengthBeforeChangingDirection)
             {
                 //random direction change
-                max_chDirCounter = (int)(Random.value * 5) + 2;
-                dir = changeDirection(dir);
-                ch_dir = 0;
+                lengthBeforeChangingDirection = (int)(Random.value * 5) + 2;
+                dir = ChangeDirection(dir);
+                changeDirectionCounter = 0;
             }
             length++;
-            ch_dir++;
+            changeDirectionCounter++;
 
             if (length == maxLength)
             {
@@ -238,7 +237,7 @@ public class StructureGenerator
     {
         foreach(Vector3Int tile in tunnelTiles)
         {
-            foreach(Vector3Int surrTile in getSurroundingTiles(tile))
+            foreach(Vector3Int surrTile in GetSurroundingTiles(tile))
             {
                 if(!tiles.GetIndoorTiles().Contains(map.ground.GetTile(surrTile)) && !tiles.GetStructureTiles().Contains(map.structures.GetTile(surrTile)))
                 {
@@ -247,7 +246,7 @@ public class StructureGenerator
             }
         }
     }
-    List<Vector3Int> getSurroundingTiles(Vector3Int tile)
+    List<Vector3Int> GetSurroundingTiles(Vector3Int tile)
     {
         List<Vector3Int> listOfTiles = new List<Vector3Int>();
         listOfTiles.Add(new Vector3Int(tile.x, tile.y + 1, 0));
@@ -260,12 +259,12 @@ public class StructureGenerator
         listOfTiles.Add(new Vector3Int(tile.x - 1, tile.y + 1, 0));
         return listOfTiles;
     }
-    List<Rect> getRandomRoomsInArea(Rect area, int tries)
+    List<Rect> GetRandomRoomsInArea(Rect area, int tries)
     {
         List<Rect> rooms = new List<Rect>();
         for (int i = 0; i < tries; i++)
         {
-            Rect newRoom = createRandomRectangleInArea(area);
+            Rect newRoom = CreateRandomRectangleInArea(area);
             Rect newRoomPlus1 = new Rect(newRoom);
             newRoomPlus1.yMin -= 1;
             newRoomPlus1.xMin -= 1;
@@ -290,10 +289,10 @@ public class StructureGenerator
     public void CreateDungeon(Rect dungeonArea)
     {
 
-        List<Rect> rooms = getRandomRoomsInArea(dungeonArea, DUNGEON_GENERATE_CYCLE);
+        List<Rect> rooms = GetRandomRoomsInArea(dungeonArea, DUNGEON_GENERATE_CYCLE);
         List<Vector3Int> tunnels = new List<Vector3Int>();
-        System.Func<ITileset, TileBase> getStructure = tileset => tileset.GetStructureTile();
-        System.Func<ITileset, TileBase> getIndoor = tileset => tileset.GetIndoorTile();
+        System.Func<Tileset, TileBase> getStructure = tileset => tileset.GetStructureTile();
+        System.Func<Tileset, TileBase> getIndoor = tileset => tileset.GetIndoorTile();
         foreach (Rect room in rooms)
         {
             MapHelper.MakeBox(map.structures, room, getStructure, tiles);
@@ -312,10 +311,10 @@ public class StructureGenerator
 
     public void CreateVillage(Rect area)
     {
-        List<Rect> rooms = getRandomRoomsInArea(area, DUNGEON_GENERATE_CYCLE);
+        List<Rect> rooms = GetRandomRoomsInArea(area, DUNGEON_GENERATE_CYCLE);
         List<Vector3Int> tunnels = new List<Vector3Int>();
-        System.Func<ITileset, TileBase> getStructure = tileset => tileset.GetStructureTile();
-        System.Func<ITileset, TileBase> getIndoor = tileset => tileset.GetIndoorTile();
+        System.Func<Tileset, TileBase> getStructure = tileset => tileset.GetStructureTile();
+        System.Func<Tileset, TileBase> getIndoor = tileset => tileset.GetIndoorTile();
         foreach (Rect room in rooms)
         {
             MapHelper.MakeRoom(map.structures, room, getStructure, tiles);
