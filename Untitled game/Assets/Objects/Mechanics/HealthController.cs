@@ -17,7 +17,6 @@ public class HealthController
     public void ReceiveDamage(int damage)
     {
         healthAmount -= damage;
-        Debug.Log(healthAmount);
         if (healthAmount <= 0)
         {
             IsAlive = false;

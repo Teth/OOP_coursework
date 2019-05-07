@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    bool isPlayerAppeared;
     EnemyController enemyController;
     public float speed;
     Rigidbody2D body;
@@ -13,12 +14,14 @@ public class Enemy : MonoBehaviour
     public int damage;
     public int health;
     HealthController healthController;
+    Vector2 playerLastEnterance;
     //
     public float agroRange;
     public float attackRange;
     // Start is called before the first frame update
     void Start()
     {
+        isPlayerAppeared = false;
         enemyController = new EnemyController(new FishController());
         healthController = new HealthController(health);
         body = GetComponent<Rigidbody2D>();
@@ -28,9 +31,8 @@ public class Enemy : MonoBehaviour
     private bool IsWayToPlayerExists()
     {
         RaycastHit2D hit = Physics2D.Raycast(transform.position, GetDirectionToPlayer());
-        Debug.Log("Ray hits " + hit.collider.tag);
         if (hit.collider.tag == "Player")
-        {            
+        {
             return true;
         }
         return false;
@@ -41,7 +43,7 @@ public class Enemy : MonoBehaviour
     }
     private Vector2 GetDirectionToPlayer()
     {
-        Vector2 magnitude = GetVectorToPlayer();       
+        Vector2 magnitude = GetVectorToPlayer();
         magnitude.Normalize();
         return magnitude;
     }
@@ -50,26 +52,32 @@ public class Enemy : MonoBehaviour
     void Update()
     {
         if (healthController.IsAlive)
-        {       
-            if (GetVectorToPlayer().magnitude < (int) agroRange)
+        {
+            var vectorToPlayer = GetVectorToPlayer();
+            var distanceToPlayer = GetVectorToPlayer().magnitude;            
+            if (distanceToPlayer < (int)agroRange && IsWayToPlayerExists())
             {
-                if (IsWayToPlayerExists())
+                isPlayerAppeared = true;
+                playerLastEnterance = player.transform.position;
+                Debug.DrawLine(body.position, playerLastEnterance + body.position, Color.red, 1);
+                if (distanceToPlayer > (int)attackRange)
                 {
-                    if (GetVectorToPlayer().magnitude > (int) attackRange)
-                    {
-                        enemyController.RotateToPlayer(transform, GetDirectionToPlayer());
-                        enemyController.Move(body, speed, GetDirectionToPlayer());
-                    }
-                    //else if (GetVectorToPlayer().magnitude < 3)
-                    //{
-                    //    enemyController.Flee(body, speed, GetDirectionToPlayer());
-                    //}
-                    else
-                    {
-                        enemyController.Attack(body, -5);
-                    }
+                    enemyController.RotateToPlayer(transform, GetDirectionToPlayer());
+                    enemyController.Move(body, speed, GetDirectionToPlayer());
                 }
-            }                
+                //else if (GetVectorToPlayer().magnitude < 3)
+                //{
+                //    enemyController.Flee(body, speed, GetDirectionToPlayer());
+                //}
+                else
+                {
+                    enemyController.Attack(body, -5);
+                }
+            }
+            else if (isPlayerAppeared)
+            {
+                enemyController.MoveToPosition(body, speed, playerLastEnterance);
+            }
         }
         else
         {
@@ -80,7 +88,6 @@ public class Enemy : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log("enemy was hit");        
         if (collision.collider.tag == "Player")
         {
             healthController.ReceiveDamage(((Player)collision.collider.GetComponent("Player")).damage);
@@ -94,6 +101,7 @@ public interface IEnemyController
     void Move(Rigidbody2D body, float speed, Vector2 direction);
     void RotateToPlayer(Transform transform, Vector2 rotateDirection);
     void Flee(Rigidbody2D body, float speed, Vector2 direction);
+    void MoveToPosition(Rigidbody2D body, float speed, Vector2 destination);
 }
 
 //Abstraction
@@ -120,8 +128,13 @@ public class EnemyController
     {
         enemyController.RotateToPlayer(transform, rotateDirection);
     }
+    public void MoveToPosition(Rigidbody2D body, float speed, Vector2 destination)
+    {
+        enemyController.MoveToPosition(body, speed, destination);
+    }
 }
 
+//Concrete Abstraction
 public class FishController : IEnemyController
 {
     public void Attack(Rigidbody2D body, int rotation)
@@ -139,11 +152,25 @@ public class FishController : IEnemyController
     public void Move(Rigidbody2D body, float speed, Vector2 direction)
     {
         body.velocity = speed * direction;
-        body.rotation = 0;
     }
 
     public void RotateToPlayer(Transform transform, Vector2 rotateDirection)
     {
         transform.up = rotateDirection;
+    }
+    public void MoveToPosition(Rigidbody2D body, float speed, Vector2 destination)
+    {
+        Debug.Log(destination);
+        //Debug.Log((destination - body.position).magnitude);
+        if ((destination - body.position).magnitude > 0.1)
+        {
+            Move(body, speed, (destination - body.position).normalized);
+            //Debug.Log("PROIDEMTE");
+        }
+        else
+        {
+            Debug.Log("PLEASE STOP");
+            body.velocity = Vector2.zero;            
+        }
     }
 }

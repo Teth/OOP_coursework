@@ -37,7 +37,6 @@ public class Player : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log("player was hit");        
         if (collision.collider.tag == "Enemy")
         {
             healthController.ReceiveDamage(((Enemy) collision.collider.GetComponent("Enemy")).damage);

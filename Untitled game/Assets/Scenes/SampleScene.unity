@@ -615,8 +615,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.14325593, y: 2.5086315}
-  m_Size: {x: 5.5106516, y: 13.900195}
+  m_Offset: {x: 0.14325586, y: -2.6727977}
+  m_Size: {x: 5.510554, y: 8.461689}
   m_Direction: 0
 --- !u!50 &1377900835
 Rigidbody2D:
@@ -638,7 +638,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!4 &1377900836
 Transform:
   m_ObjectHideFlags: 0
@@ -647,8 +647,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1377900830}
   m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: -12.456, y: -10.296, z: 0}
-  m_LocalScale: {x: 0.19804156, y: 0.19617417, z: 1}
+  m_LocalPosition: {x: -10.9018, y: -3.2207, z: 0}
+  m_LocalScale: {x: 0.066206075, y: 0.07491896, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
@@ -964,6 +964,6 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -30.38, y: 7.61}
+  m_AnchoredPosition: {x: -5.31, y: 3.98}
   m_SizeDelta: {x: 3, y: 4.5}
   m_Pivot: {x: 0.5, y: 0.5}
