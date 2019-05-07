@@ -5,7 +5,7 @@ using UnityEngine.Tilemaps;
 
 // FACADE pattern
 
-public class StructureGenerator 
+public class MapFacade 
 {
     GameMap map;
     Tileset tiles;
@@ -19,18 +19,81 @@ public class StructureGenerator
 
     protected TilemapModifier groundModifier;
     protected TilemapModifier structuresModifier;
+    protected TilemapModifier decorationsModifier;
     protected RandomRectangleConstructor roomRectangleConstructor;
     protected MapOperations mapOperations;
+    protected RandomRectangleConstructor globalMapRectangleConstructor;
 
-    public StructureGenerator(GameMap map, Tileset tileset)
+    public MapFacade(GameMap map, Tileset tileset)
     {
         this.map = map;
         this.tiles = tileset;
         structuresModifier = new TilemapModifier(map.structures);
         groundModifier = new TilemapModifier(map.ground);
+        decorationsModifier = new TilemapModifier(map.decorations);
+
         roomRectangleConstructor = new RandomRectangleConstructor(new Vector2Int(MIN_WIDTH, MIN_HEIGHT), new Vector2Int(MAX_WIDTH, MAX_HEIGHT));
+        globalMapRectangleConstructor = new RandomRectangleConstructor(new Vector2Int(map.sizeX / 3, map.sizeY / 3), new Vector2Int((int)(map.sizeX / 1.2), (int)(map.sizeY / 1.2)));
+
         mapOperations = new MapOperations(map);
     }
+
+    public void CreateDungeonInArea(Rect area)
+    {
+        CreateDungeon(globalMapRectangleConstructor.CreateRandomRectangleInArea(area));
+    }
+
+    public void CreateVillageInArea(Rect area)
+    {
+        CreateVillage(globalMapRectangleConstructor.CreateRandomRectangleInArea(area));
+    }
+
+    public void CreateRuinsInArea(Rect area)
+    {
+        CreateRuins(globalMapRectangleConstructor.CreateRandomRectangleInArea(area));
+    }
+
+    private void CreateRuins(Rect area)
+    {
+        List<Rect> rooms = roomRectangleConstructor.CreateRandomRectanglesInArea(area, DUNGEON_GENERATE_CYCLE);
+
+        TilemapModifier structuresModifier = new TilemapModifier(map.structures);
+        TilemapModifier groundModifier = new TilemapModifier(map.ground);
+
+        System.Func<Tileset, TileBase> getStructure = tileset => tileset.GetStructureTile();
+        System.Func<Tileset, TileBase> getIndoor = tileset => tileset.GetIndoorTile();
+
+        foreach (Rect room in rooms)
+        {
+            structuresModifier.MakeRoom(room, getStructure, tiles, 0.4f);
+            groundModifier.FillRect(room, getIndoor, tiles);
+            groundModifier.GenerateFadeout(room, getIndoor, tiles, 2);
+        }
+    }
+
+    public void GenerateDecorations(Rect area, float appearRate = 0.05f)
+    {
+        List<Vector3Int> listOfDecoCoordinates = VectorOperations.GetRandomCoordinatesInArea(area, appearRate);
+        foreach(Vector3Int coord in listOfDecoCoordinates)
+        {
+            bool isIndoor = true;
+            if(tiles.GetGroundTiles().Contains(mapOperations.GetGroundTile(coord)))
+            {
+                isIndoor = false;
+            }
+            decorationsModifier.SetTile(coord, tiles.GetDecorationTile(isIndoor));
+        }
+    }
+
+    public void CreateGround(Rect area)
+    {
+        System.Func<Tileset, TileBase> getGround = tileset => tileset.GetGroundTile();
+
+        groundModifier.FillRect(area, getGround, tiles);
+        groundModifier.GenerateFadeout(area, getGround, tiles, Mathf.CeilToInt((area.height + area.width) / 16));
+    }
+
+    
 
     List<Vector3Int> CreateTunnelFromRoom(Rect room)
     {
@@ -42,7 +105,7 @@ public class StructureGenerator
         int length = 0;
         int changeDirectionCounter = 0;
 
-        Vector3Int cursor = VectorOperations.GetVector3FromVector2(VectorOperations.GenerateRandomPositionOnBorder(room));
+        Vector3Int cursor = VectorOperations.GenerateRandomPositionOnBorder(room);
         dir = DirectonsOperations.GetTunnelDirectionFromRoom(cursor, room);
         map.structures.SetTile(cursor, null);
         
@@ -79,13 +142,35 @@ public class StructureGenerator
         return tunnelTiles;
     }
 
+
+
+
+    // private methods
+    private void CreateVillage(Rect area)
+    {
+        List<Rect> rooms = roomRectangleConstructor.CreateRandomRectanglesInArea(area, DUNGEON_GENERATE_CYCLE);
+
+        TilemapModifier structuresModifier = new TilemapModifier(map.structures);
+        TilemapModifier groundModifier = new TilemapModifier(map.ground);
+
+        System.Func<Tileset, TileBase> getStructure = tileset => tileset.GetStructureTile();
+        System.Func<Tileset, TileBase> getIndoor = tileset => tileset.GetIndoorTile();
+
+        foreach (Rect room in rooms)
+        {
+            structuresModifier.MakeRoom(room, getStructure, tiles);
+            groundModifier.FillRect(room, getIndoor, tiles);
+        }
+    }
+
+
     private void CreateWalls(List<Vector3Int> tunnelTiles)
     {
-        foreach(Vector3Int tile in tunnelTiles)
+        foreach (Vector3Int tile in tunnelTiles)
         {
-            foreach(Vector3Int surrTile in VectorOperations.GetSurroundingTiles(tile))
+            foreach (Vector3Int surrTile in VectorOperations.GetSurroundingTiles(tile))
             {
-                if(!tiles.GetIndoorTiles().Contains(mapOperations.GetGroundTile(surrTile)))
+                if (!tiles.GetIndoorTiles().Contains(mapOperations.GetGroundTile(surrTile)))
                 {
                     map.structures.SetTile(surrTile, tiles.GetStructureTile());
                 }
@@ -93,11 +178,12 @@ public class StructureGenerator
         }
     }
 
-    public void CreateDungeon(Rect dungeonArea)
+
+    void CreateDungeon(Rect dungeonArea)
     {
         Debug.Log(roomRectangleConstructor);
         List<Rect> rooms = roomRectangleConstructor.CreateRandomRectanglesInArea(dungeonArea, DUNGEON_GENERATE_CYCLE);
-        
+
         System.Func<Tileset, TileBase> getStructure = tileset => tileset.GetStructureTile();
         System.Func<Tileset, TileBase> getIndoor = tileset => tileset.GetIndoorTile();
 
@@ -115,28 +201,7 @@ public class StructureGenerator
                 tilesToWallOff.AddRange(CreateTunnelFromRoom(room));
             }
         }
-        CreateWalls(tilesToWallOff);   
+        CreateWalls(tilesToWallOff);
     }
 
-    public void CreateVillage(Rect area)
-    {
-        List<Rect> rooms = roomRectangleConstructor.CreateRandomRectanglesInArea(area, DUNGEON_GENERATE_CYCLE);
-
-        TilemapModifier structuresModifier = new TilemapModifier(map.structures);
-        TilemapModifier groundModifier = new TilemapModifier(map.ground);
-
-        System.Func<Tileset, TileBase> getStructure = tileset => tileset.GetStructureTile();
-        System.Func<Tileset, TileBase> getIndoor = tileset => tileset.GetIndoorTile();
-
-        foreach (Rect room in rooms)
-        {
-            structuresModifier.MakeRoom(room, getStructure, tiles);
-            groundModifier.FillRect(room, getIndoor, tiles);
-        }
-    }
-
-    public void CreateRuins(Rect area)
-    {
-
-    }
 }

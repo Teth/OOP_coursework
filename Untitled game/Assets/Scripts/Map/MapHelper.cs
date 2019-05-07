@@ -38,6 +38,11 @@ public class TilemapModifier
         this.tilemap = tilemap;
     }
 
+    public void SetTile(Vector3Int coords, TileBase tile)
+    {
+        tilemap.SetTile(coords, tile);
+    }
+
     public List<Vector3Int> MakeBox(Rect rect, System.Func<Tileset, TileBase> func, Tileset tileset, float fillPerc = 1)
     {
         int width = (int)(rect.width);
@@ -263,7 +268,7 @@ public static class VectorOperations
         return new Vector3Int(vector.x, vector.y, 0);
     }
 
-    public static Vector2Int GenerateRandomPositionOnBorder(Rect r1)
+    public static Vector3Int GenerateRandomPositionOnBorder(Rect r1)
     {
         int tunPosX = (int)((r1.width - 2) * Random.value) + 1;
         int tunPosY = (int)((r1.height - 2) * Random.value) + 1;
@@ -291,7 +296,7 @@ public static class VectorOperations
             }
             tunPosX = tunPosX + (int)r1.xMin;
         }
-        return new Vector2Int(tunPosX, tunPosY);
+        return new Vector3Int(tunPosX, tunPosY, 0);
     }
 
     public static Vector3Int MoveCursor(Vector3Int cursor, Directions dir)
@@ -335,6 +340,24 @@ public static class VectorOperations
         listOfTiles.Add(new Vector3Int(tile.x - 1, tile.y, 0));
         listOfTiles.Add(new Vector3Int(tile.x - 1, tile.y + 1, 0));
         return listOfTiles;
+    }
+
+    public static List<Vector3Int> GetRandomCoordinatesInArea(Rect area, float fillPerc)
+    {
+        int width = (int)(area.width);
+        int height = (int)(area.height);
+        List<Vector3Int> coords = new List<Vector3Int>();
+        for (int counter_width = (int)area.xMin; counter_width < (int)area.xMax; counter_width++)
+        {
+            for (int counter_height = (int)area.yMin; counter_height < (int)area.yMax; counter_height++)
+            {
+                if (UnityEngine.Random.value < fillPerc)
+                {
+                    coords.Add(new Vector3Int(counter_width, counter_height, 0));
+                }
+            }
+        }
+        return coords;
     }
 
 }

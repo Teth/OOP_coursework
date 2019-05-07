@@ -17,7 +17,7 @@ public class MapGenerator
     {
         b.BuildGround();
         b.BuildStructures();
-        //b.BuildDecorations();
+        b.BuildDecorations();
     }
 
 }
@@ -25,68 +25,80 @@ public class MapGenerator
 public class DungonMapBuilder : MapBuilder
 {
     int MAX_DUNGEONS = 2;
+    MapFacade generator;
 
     public DungonMapBuilder(Rect area, GameMap map, Tileset tileset) : base(area, map, tileset)
     {
-       
+        generator = new MapFacade(map, tileset);
     }
 
     public override void BuildDecorations()
     {
-        throw new System.NotImplementedException();
+        generator.GenerateDecorations(area, 0.01f);
     }
 
     public override void BuildGround()
     {
-        System.Func<Tileset, TileBase> getGround = tileset => tileset.GetGroundTile();
-        TilemapModifier mapOperations = new TilemapModifier(map.ground);
-
-        mapOperations.FillRect(area, getGround, tileset);
-        mapOperations.GenerateFadeout(area, getGround, tileset, Mathf.CeilToInt((area.height + area.width)/16));
+        generator.CreateGround(area);
     }
 
     public override void BuildStructures()
     {
-        StructureGenerator gen = new StructureGenerator(map, tileset);
-        int numberOfDungeons = (int)(Random.value * (MAX_DUNGEONS - 1)) + 1;
-        RandomRectangleConstructor rectConstr = new RandomRectangleConstructor(new Vector2Int((int)area.width / 3, (int)area.height / 3), new Vector2Int((int)(area.width / 1.2), (int)(area.height / 1.2)));
-        for (int i = 0; i < numberOfDungeons; i++)
-        {
-            gen.CreateDungeon(rectConstr.CreateRandomRectangleInArea(area));
-        }
+        generator.CreateDungeonInArea(area);
     }
 }
 
 public class VillageMapBuilder : MapBuilder
-{ 
-
+{
+    MapFacade generator;
     public VillageMapBuilder(Rect area, GameMap map) : base(area, map, null)
     {
         tileset = new Tileset(new TilesetFactory().GetTileset(Locations.Village));
+        generator = new MapFacade(map, tileset);
     }
 
     public override void BuildDecorations()
     {
-        throw new System.NotImplementedException();
+        generator.GenerateDecorations(area);
     }
 
     public override void BuildGround()
     {
-        TilemapModifier mapOperations = new TilemapModifier(map.ground);
-
-        System.Func<Tileset, TileBase> getGround = tileset => tileset.GetGroundTile();
-
-        mapOperations.FillRect(area, getGround, tileset);
-        mapOperations.GenerateFadeout(area, getGround, tileset, (int)((area.width + area.height) / 16));
+        generator.CreateGround(area);
     }
 
     public override void BuildStructures()
     {
-        StructureGenerator gen = new StructureGenerator(map, tileset);
-        RandomRectangleConstructor rectConstr = new RandomRectangleConstructor(new Vector2Int((int)area.width / 2, (int)area.height / 2), new Vector2Int((int)(area.width / 1.2), (int)(area.height / 1.2)));
-        gen.CreateVillage(rectConstr.CreateRandomRectangleInArea(area));
+        generator.CreateVillageInArea(area);
     }
 }
+
+public class RuinsMapBuilder : MapBuilder
+{
+    int MAX_DUNGEONS = 2;
+    MapFacade generator;
+
+    public RuinsMapBuilder(Rect area, GameMap map, Tileset tileset) : base(area, map, tileset)
+    {
+        generator = new MapFacade(map, tileset);
+    }
+
+    public override void BuildDecorations()
+    {
+        generator.GenerateDecorations(area, 0.1f);
+    }
+
+    public override void BuildGround()
+    {
+        generator.CreateGround(area);
+    }
+
+    public override void BuildStructures()
+    {
+        generator.CreateRuinsInArea(area);
+    }
+}
+
 
 public abstract class MapBuilder
 {
@@ -104,5 +116,9 @@ public abstract class MapBuilder
     public abstract void BuildGround();
     public abstract void BuildDecorations();
     public abstract void BuildStructures();
+    public GameMap GetMap()
+    {
+        return map;
+    }
 }
 

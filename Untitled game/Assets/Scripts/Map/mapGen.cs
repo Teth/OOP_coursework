@@ -24,11 +24,11 @@ public class mapGen : MonoBehaviour
         TilesetFactory tilesetFactory = new TilesetFactory();
  
         ITileset ftileset = tilesetFactory.GetTileset(Locations.Forest);
-        ITileset vtileset = tilesetFactory.GetTileset(Locations.Village);
-        ITileset dtileset = tilesetFactory.GetTileset(Locations.Desert);
+        //ITileset vtileset = tilesetFactory.GetTileset(Locations.Village);
+        //ITileset dtileset = tilesetFactory.GetTileset(Locations.Desert);
 
         Tileset ts = new Tileset(ftileset);
-        MapBuilder builder = new DungonMapBuilder(new Rect(-MapSizeX / 2, -MapSizeY / 2, MapSizeX, MapSizeY), map, ts);
+        MapBuilder builder = new RuinsMapBuilder(new Rect(-MapSizeX / 2, -MapSizeY / 2, MapSizeX, MapSizeY), map, ts);
         //MapBuilder builder = new VillageMapBuilder(new Rect(-MapSizeX / 2, -MapSizeY / 2, MapSizeX, MapSizeY), map);
 
         MapGenerator mapGen = new MapGenerator(builder);

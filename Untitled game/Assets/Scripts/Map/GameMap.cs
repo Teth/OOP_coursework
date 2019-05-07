@@ -5,8 +5,8 @@ using UnityEngine.Tilemaps;
 
 public class GameMap
 {
-    int sizeX;
-    int sizeY;
+    public int sizeX;
+    public int sizeY;
     public Tilemap ground;
     public Tilemap decorations;
     public Tilemap structures;
