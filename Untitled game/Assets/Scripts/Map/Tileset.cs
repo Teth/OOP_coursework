@@ -4,6 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 // Bridge pattern
+
 public enum Locations
 {
     Forest,
@@ -17,9 +18,11 @@ public interface ITileset
     TileBase GetGroundTile();
     TileBase GetIndoorTile();
     TileBase GetStructureTile();
+    TileBase GetDecorationTile(bool isIndoors);
     List<TileBase> GetGroundTiles();
     List<TileBase> GetIndoorTiles();
     List<TileBase> GetStructureTiles();
+    List<TileBase> GetDecorationTiles(bool isIndoors);
 }
 
 //Abstraction
@@ -31,21 +34,30 @@ public class Tileset
     {
         this._tileset = tileset;
     }
+
     public void SetTileset(ITileset tileset)
     {
         this._tileset = tileset;
     }
+
     public TileBase GetGroundTile()
     {
         return _tileset.GetGroundTile();
     }
+
     public TileBase GetIndoorTile()
     {
         return _tileset.GetIndoorTile();
     }
+
     public TileBase GetStructureTile()
     {
         return _tileset.GetStructureTile();
+    }
+
+    public TileBase GetDecorationTile(bool isIndoors)
+    {
+        return _tileset.GetDecorationTile(isIndoors);
     }
 
     public List<TileBase> GetIndoorTiles()
@@ -71,13 +83,22 @@ public class ForestTileset : ITileset
     protected List<TileBase> ground;
     protected List<TileBase> indoorGround;
     protected List<TileBase> structures;
+    protected List<TileBase> decorationsOutside;
+    protected List<TileBase> decorationsInside;
 
     public ForestTileset()
     {
         ground = new List<TileBase>();
         indoorGround = new List<TileBase>();
         structures = new List<TileBase>();
+        decorationsInside = new List<TileBase>();
+        decorationsOutside = new List<TileBase>();
         AssetProxy tileProxy = new AssetProxy(typeof(TileBase));
+        decorationsInside.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/decoration_dungeon.asset"));
+        decorationsInside.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/decoration_dungeon1.asset"));
+        decorationsInside.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/decoration_dungeon2.asset"));
+        decorationsInside.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/decoration_dungeon3.asset"));
+        decorationsOutside.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/decoration_outdoor.asset"));
         ground.Add(tileProxy.LoadAsset("Assets/Tiles/Shared/ground.asset"));
         ground.Add(tileProxy.LoadAsset("Assets/Tiles/Shared/ground1.asset"));
         indoorGround.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/stone_floor.asset"));
@@ -90,9 +111,32 @@ public class ForestTileset : ITileset
         structures.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/stone.asset"));
     }
 
+    public TileBase GetDecorationTile(bool isIndoors)
+    {
+        if(isIndoors)
+        {
+            return Tiles.GetRandomTile(decorationsInside);
+        }else
+        {
+            return Tiles.GetRandomTile(decorationsOutside);
+        }
+    }
+
+    public List<TileBase> GetDecorationTiles(bool isIndoors)
+    {
+        if (isIndoors)
+        {
+            return decorationsInside;
+        }
+        else
+        {
+            return decorationsOutside;
+        }
+    }
+
     public TileBase GetGroundTile()
     {
-        return MapHelper.GetRandomTile(ground);
+        return Tiles.GetRandomTile(ground);
     }
 
     public List<TileBase> GetGroundTiles()
@@ -102,7 +146,7 @@ public class ForestTileset : ITileset
 
     public TileBase GetIndoorTile()
     {
-        return MapHelper.GetRandomTile(indoorGround, 0.7f);
+        return Tiles.GetRandomTile(indoorGround, 0.7f);
     }
 
     public List<TileBase> GetIndoorTiles()
@@ -112,7 +156,7 @@ public class ForestTileset : ITileset
 
     public TileBase GetStructureTile()
     {
-        return MapHelper.GetRandomTile(structures);
+        return Tiles.GetRandomTile(structures);
     }
 
     public List<TileBase> GetStructureTiles()
@@ -127,16 +171,22 @@ public class DesertTileset : ITileset
     protected List<TileBase> ground;
     protected List<TileBase> indoorGround;
     protected List<TileBase> structures;
+    protected List<TileBase> decorationsOutside;
+    protected List<TileBase> decorationsInside;
 
     public DesertTileset()
     {
         ground = new List<TileBase>();
         indoorGround = new List<TileBase>();
         structures = new List<TileBase>();
+        decorationsOutside = new List<TileBase>();
+        decorationsInside = new List<TileBase>();
         AssetProxy tileProxy = new AssetProxy(typeof(TileBase));
         ground.Add(tileProxy.LoadAsset("Assets/Tiles/Desert/desert.asset"));
         ground.Add(tileProxy.LoadAsset("Assets/Tiles/Desert/desert2.asset"));
         ground.Add(tileProxy.LoadAsset("Assets/Tiles/Desert/desert3.asset"));
+        decorationsInside.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/decoration_dungeon3.asset"));
+        decorationsOutside.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/decoration_outdoor.asset"));
         indoorGround.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/stone_floor.asset"));
         indoorGround.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/stone_deco1.asset"));
         indoorGround.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/stone_deco2.asset"));
@@ -148,9 +198,32 @@ public class DesertTileset : ITileset
 
     }
 
+    public TileBase GetDecorationTile(bool isIndoors)
+    {
+        if (isIndoors)
+        {
+            return Tiles.GetRandomTile(decorationsInside);
+        }
+        else
+        {
+            return Tiles.GetRandomTile(decorationsOutside);
+        }
+    }
+
+    public List<TileBase> GetDecorationTiles(bool isIndoors)
+    {
+        if (isIndoors)
+        {
+            return decorationsInside;
+        }
+        else
+        {
+            return decorationsOutside;
+        }
+    }
     public TileBase GetGroundTile()
     {
-        return MapHelper.GetRandomTile(ground);
+        return Tiles.GetRandomTile(ground);
     }
 
     public List<TileBase> GetGroundTiles()
@@ -160,7 +233,7 @@ public class DesertTileset : ITileset
 
     public TileBase GetIndoorTile()
     {
-        return MapHelper.GetRandomTile(indoorGround, 0.7f);
+        return Tiles.GetRandomTile(indoorGround, 0.7f);
     }
 
     public List<TileBase> GetIndoorTiles()
@@ -170,7 +243,7 @@ public class DesertTileset : ITileset
 
     public TileBase GetStructureTile()
     {
-        return MapHelper.GetRandomTile(structures);
+        return Tiles.GetRandomTile(structures);
     }
 
     public List<TileBase> GetStructureTiles()
@@ -185,46 +258,78 @@ public class VillageTileset : ITileset
     protected List<TileBase> ground;
     protected List<TileBase> indoorGround;
     protected List<TileBase> structures;
+    protected List<TileBase> decorationsOutside;
+    protected List<TileBase> decorationsInside;
+
 
     public VillageTileset()
     {
         ground = new List<TileBase>();
         indoorGround = new List<TileBase>();
         structures = new List<TileBase>();
+        decorationsOutside = new List<TileBase>();
+        decorationsInside = new List<TileBase>();
         AssetProxy tileProxy = new AssetProxy(typeof(TileBase));
         ground.Add(tileProxy.LoadAsset("Assets/Tiles/Shared/ground.asset"));
         ground.Add(tileProxy.LoadAsset("Assets/Tiles/Shared/ground1.asset"));
+        decorationsInside.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/decoration_dungeon3.asset"));
+        decorationsOutside.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/decoration_outdoor.asset"));
         indoorGround.Add(tileProxy.LoadAsset("Assets/Tiles/Village/village_floor.asset"));
         structures.Add(tileProxy.LoadAsset("Assets/Tiles/Village/village_wall.asset"));
     }
 
+
+    public TileBase GetDecorationTile(bool isIndoors)
+    {
+        if (isIndoors)
+        {
+            return Tiles.GetRandomTile(decorationsInside);
+        }
+        else
+        {
+            return Tiles.GetRandomTile(decorationsOutside);
+        }
+    }
+
+    public List<TileBase> GetDecorationTiles(bool isIndoors)
+    {
+        if (isIndoors)
+        {
+            return decorationsInside;
+        }
+        else
+        {
+            return decorationsOutside;
+        }
+    }
+
     public TileBase GetGroundTile()
     {
-        return MapHelper.GetRandomTile(ground);
+        return Tiles.GetRandomTile(ground);
     }
 
     public List<TileBase> GetGroundTiles()
     {
-        throw new System.NotImplementedException();
+        return ground;
     }
 
     public TileBase GetIndoorTile()
     {
-        return MapHelper.GetRandomTile(indoorGround);
+        return Tiles.GetRandomTile(indoorGround);
     }
 
     public List<TileBase> GetIndoorTiles()
     {
-        throw new System.NotImplementedException();
+        return indoorGround;
     }
 
     public TileBase GetStructureTile()
     {
-        return MapHelper.GetRandomTile(structures);
+        return Tiles.GetRandomTile(structures);
     }
 
     public List<TileBase> GetStructureTiles()
     {
-        throw new System.NotImplementedException();
+        return structures;
     }
 }

@@ -5,12 +5,15 @@ using UnityEngine.Tilemaps;
 
 public class mapGen : MonoBehaviour
 {
-    // Start is called before the first frame update
-    int MapSizeX = 160;
-    int MapSizeY = 100;
+
     EdgeCollider2D edgeCollider;
+
     void Start()
     {
+        Vector2Int ms = StaticTestSettings.getMapSize();
+        int MapSizeX = ms.x;
+        int MapSizeY = ms.y;
+
         System.DateTime start = System.DateTime.Now;
 
         edgeCollider = GetComponent<EdgeCollider2D>();
@@ -22,13 +25,25 @@ public class mapGen : MonoBehaviour
         map.structures = GetComponentsInChildren<Tilemap>()[2];
 
         TilesetFactory tilesetFactory = new TilesetFactory();
- 
-        ITileset ftileset = tilesetFactory.GetTileset(Locations.Forest);
-        ITileset vtileset = tilesetFactory.GetTileset(Locations.Village);
-        ITileset dtileset = tilesetFactory.GetTileset(Locations.Desert);
+        Tileset ts = tilesetFactory.GetTileset(StaticTestSettings.getLocation());
 
-        Tileset ts = new Tileset(ftileset);
-        MapBuilder builder = new DungonMapBuilder(new Rect(-MapSizeX / 2, -MapSizeY / 2, MapSizeX, MapSizeY), map, ts);
+        MapBuilder builder;
+        MapType type = StaticTestSettings.GetMapType();
+        switch (type)
+        {
+            case MapType.Dungeon:
+                builder = new DungeonMapBuilder(new Rect(-MapSizeX / 2, -MapSizeY / 2, MapSizeX, MapSizeY), map, ts);
+                break;
+            case MapType.Ruins:
+                builder = new RuinsMapBuilder(new Rect(-MapSizeX / 2, -MapSizeY / 2, MapSizeX, MapSizeY), map, ts);
+                break;
+            case MapType.Village:
+                builder = new VillageMapBuilder(new Rect(-MapSizeX / 2, -MapSizeY / 2, MapSizeX, MapSizeY), map);
+                break;
+            default:
+                builder = new DungeonMapBuilder(new Rect(-MapSizeX / 2, -MapSizeY / 2, MapSizeX, MapSizeY), map, ts);
+                break;
+        }
         //MapBuilder builder = new VillageMapBuilder(new Rect(-MapSizeX / 2, -MapSizeY / 2, MapSizeX, MapSizeY), map);
 
         MapGenerator mapGen = new MapGenerator(builder);
@@ -39,19 +54,6 @@ public class mapGen : MonoBehaviour
         AbstractEnemyFactory ratFactory = new RatFactory();
         ratFactory.CreateMeleeEnemy();
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-        
-    }
-
-    
-
-    
-
-   
 }
 
 

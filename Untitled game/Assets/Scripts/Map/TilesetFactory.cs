@@ -6,16 +6,16 @@ using UnityEngine.Tilemaps;
 
 public class TilesetFactory
 {
-    Dictionary<Locations, ITileset> tilesets = new Dictionary<Locations, ITileset>();
+    Dictionary<Locations, Tileset> tilesets = new Dictionary<Locations, Tileset>();
 
     public TilesetFactory()
     {
-        tilesets.Add(Locations.Forest, new ForestTileset());
-        tilesets.Add(Locations.Desert, new DesertTileset());
-        tilesets.Add(Locations.Village, new VillageTileset());
+        tilesets.Add(Locations.Forest, new Tileset(new ForestTileset()));
+        tilesets.Add(Locations.Desert, new Tileset(new DesertTileset()));
+        tilesets.Add(Locations.Village, new Tileset(new VillageTileset()));
     }
 
-    public ITileset GetTileset(Locations key)
+    public Tileset GetTileset(Locations key)
     {
         if (tilesets.ContainsKey(key))
             return tilesets[key];
