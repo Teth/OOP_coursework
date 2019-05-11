@@ -35,7 +35,9 @@ public class mapGen : MonoBehaviour
         mapGen.Generate();
 
         System.TimeSpan timeItTook = System.DateTime.Now - start;
-        Debug.Log(System.String.Format("Map generated, {0}",timeItTook));
+        Debug.Log(string.Format("Map generated, {0}",timeItTook));
+        AbstractEnemyFactory ratFactory = new RatFactory();
+        ratFactory.CreateMeleeEnemy();
     }
 
     // Update is called once per frame
