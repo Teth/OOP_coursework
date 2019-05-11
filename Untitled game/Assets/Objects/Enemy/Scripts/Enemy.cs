@@ -59,7 +59,7 @@ public class Enemy : MonoBehaviour
             {
                 isPlayerAppeared = true;
                 playerLastEnterance = player.transform.position;
-                Debug.DrawLine(body.position, playerLastEnterance + body.position, Color.red, 1);
+                Debug.DrawLine(body.position, playerLastEnterance, Color.red, 1);
                 if (distanceToPlayer > (int)attackRange)
                 {
                     enemyController.RotateToPlayer(transform, GetDirectionToPlayer());

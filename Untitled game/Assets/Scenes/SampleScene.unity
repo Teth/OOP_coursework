@@ -549,10 +549,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d65bcdba3bead7e499ccb467b51c44b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 2
+  speed: 8
   damage: 10
   health: 50
-  agroRange: 5
+  agroRange: 15
   attackRange: 2
 --- !u!212 &1377900832
 SpriteRenderer:

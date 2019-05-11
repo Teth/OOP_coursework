@@ -21,7 +21,7 @@ public class MapFacade
     protected TilemapModifier structuresModifier;
     protected TilemapModifier decorationsModifier;
     protected RandomRectangleConstructor roomRectangleConstructor;
-    protected MapOperations mapOperations;
+    protected MapModifier mapOperations;
     protected RandomRectangleConstructor globalMapRectangleConstructor;
 
     public MapFacade(GameMap map, Tileset tileset)
@@ -35,7 +35,7 @@ public class MapFacade
         roomRectangleConstructor = new RandomRectangleConstructor(new Vector2Int(MIN_WIDTH, MIN_HEIGHT), new Vector2Int(MAX_WIDTH, MAX_HEIGHT));
         globalMapRectangleConstructor = new RandomRectangleConstructor(new Vector2Int(map.sizeX / 3, map.sizeY / 3), new Vector2Int((int)(map.sizeX / 1.2), (int)(map.sizeY / 1.2)));
 
-        mapOperations = new MapOperations(map);
+        mapOperations = new MapModifier(map);
     }
 
     public void CreateDungeonInArea(Rect area)

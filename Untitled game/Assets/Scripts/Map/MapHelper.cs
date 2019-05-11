@@ -12,11 +12,9 @@ public enum Directions
     Right
 }
 
-
-public static class MapHelper
-{
-
-    
+// tiles operations
+public static class Tiles
+{    
     public static TileBase GetRandomTile(List<TileBase> tiles, float defectChance = 0)
     {
         if (Random.value > defectChance)
@@ -167,11 +165,11 @@ public class TilemapModifier
 
 }
 
-public class MapOperations
+public class MapModifier
 {
     GameMap gameMap;
 
-    public MapOperations(GameMap gameMap)
+    public MapModifier(GameMap gameMap)
     {
         this.gameMap = gameMap;
     }

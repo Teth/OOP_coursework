@@ -22,12 +22,12 @@ public class MapGenerator
 
 }
 
-public class DungonMapBuilder : MapBuilder
+public class DungeonMapBuilder : MapBuilder
 {
     int MAX_DUNGEONS = 2;
     MapFacade generator;
 
-    public DungonMapBuilder(Rect area, GameMap map, Tileset tileset) : base(area, map, tileset)
+    public DungeonMapBuilder(Rect area, GameMap map, Tileset tileset) : base(area, map, tileset)
     {
         generator = new MapFacade(map, tileset);
     }
@@ -53,7 +53,7 @@ public class VillageMapBuilder : MapBuilder
     MapFacade generator;
     public VillageMapBuilder(Rect area, GameMap map) : base(area, map, null)
     {
-        tileset = new Tileset(new TilesetFactory().GetTileset(Locations.Village));
+        tileset = new TilesetFactory().GetTileset(Locations.Village);
         generator = new MapFacade(map, tileset);
     }
 

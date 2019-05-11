@@ -4,6 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 // Bridge pattern
+
 public enum Locations
 {
     Forest,
@@ -114,10 +115,10 @@ public class ForestTileset : ITileset
     {
         if(isIndoors)
         {
-            return MapHelper.GetRandomTile(decorationsInside);
+            return Tiles.GetRandomTile(decorationsInside);
         }else
         {
-            return MapHelper.GetRandomTile(decorationsOutside);
+            return Tiles.GetRandomTile(decorationsOutside);
         }
     }
 
@@ -135,7 +136,7 @@ public class ForestTileset : ITileset
 
     public TileBase GetGroundTile()
     {
-        return MapHelper.GetRandomTile(ground);
+        return Tiles.GetRandomTile(ground);
     }
 
     public List<TileBase> GetGroundTiles()
@@ -145,7 +146,7 @@ public class ForestTileset : ITileset
 
     public TileBase GetIndoorTile()
     {
-        return MapHelper.GetRandomTile(indoorGround, 0.7f);
+        return Tiles.GetRandomTile(indoorGround, 0.7f);
     }
 
     public List<TileBase> GetIndoorTiles()
@@ -155,7 +156,7 @@ public class ForestTileset : ITileset
 
     public TileBase GetStructureTile()
     {
-        return MapHelper.GetRandomTile(structures);
+        return Tiles.GetRandomTile(structures);
     }
 
     public List<TileBase> GetStructureTiles()
@@ -201,11 +202,11 @@ public class DesertTileset : ITileset
     {
         if (isIndoors)
         {
-            return MapHelper.GetRandomTile(decorationsInside);
+            return Tiles.GetRandomTile(decorationsInside);
         }
         else
         {
-            return MapHelper.GetRandomTile(decorationsOutside);
+            return Tiles.GetRandomTile(decorationsOutside);
         }
     }
 
@@ -222,7 +223,7 @@ public class DesertTileset : ITileset
     }
     public TileBase GetGroundTile()
     {
-        return MapHelper.GetRandomTile(ground);
+        return Tiles.GetRandomTile(ground);
     }
 
     public List<TileBase> GetGroundTiles()
@@ -232,7 +233,7 @@ public class DesertTileset : ITileset
 
     public TileBase GetIndoorTile()
     {
-        return MapHelper.GetRandomTile(indoorGround, 0.7f);
+        return Tiles.GetRandomTile(indoorGround, 0.7f);
     }
 
     public List<TileBase> GetIndoorTiles()
@@ -242,7 +243,7 @@ public class DesertTileset : ITileset
 
     public TileBase GetStructureTile()
     {
-        return MapHelper.GetRandomTile(structures);
+        return Tiles.GetRandomTile(structures);
     }
 
     public List<TileBase> GetStructureTiles()
@@ -282,11 +283,11 @@ public class VillageTileset : ITileset
     {
         if (isIndoors)
         {
-            return MapHelper.GetRandomTile(decorationsInside);
+            return Tiles.GetRandomTile(decorationsInside);
         }
         else
         {
-            return MapHelper.GetRandomTile(decorationsOutside);
+            return Tiles.GetRandomTile(decorationsOutside);
         }
     }
 
@@ -304,7 +305,7 @@ public class VillageTileset : ITileset
 
     public TileBase GetGroundTile()
     {
-        return MapHelper.GetRandomTile(ground);
+        return Tiles.GetRandomTile(ground);
     }
 
     public List<TileBase> GetGroundTiles()
@@ -314,7 +315,7 @@ public class VillageTileset : ITileset
 
     public TileBase GetIndoorTile()
     {
-        return MapHelper.GetRandomTile(indoorGround);
+        return Tiles.GetRandomTile(indoorGround);
     }
 
     public List<TileBase> GetIndoorTiles()
@@ -324,7 +325,7 @@ public class VillageTileset : ITileset
 
     public TileBase GetStructureTile()
     {
-        return MapHelper.GetRandomTile(structures);
+        return Tiles.GetRandomTile(structures);
     }
 
     public List<TileBase> GetStructureTiles()
