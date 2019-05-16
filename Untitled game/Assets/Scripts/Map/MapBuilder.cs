@@ -18,7 +18,7 @@ public class MapGenerator
         b.BuildGround();
         b.BuildStructures();
         b.BuildDecorations();
-        b.SetExit();
+        b.BuildExit();
     }
 
 }
@@ -48,9 +48,9 @@ public class DungeonMapBuilder : MapBuilder
         generator.CreateDungeonInArea(area);
     }
 
-    public override void SetExit()
+    public override void BuildExit()
     {
-        throw new System.NotImplementedException();
+        generator.BuildExit();
     }
 }
 
@@ -78,7 +78,7 @@ public class VillageMapBuilder : MapBuilder
         generator.CreateVillageInArea(area);
     }
 
-    public override void SetExit()
+    public override void BuildExit()
     {
         throw new System.NotImplementedException();
     }
@@ -109,7 +109,7 @@ public class RuinsMapBuilder : MapBuilder
         generator.CreateRuinsInArea(area);
     }
 
-    public override void SetExit()
+    public override void BuildExit()
     {
         throw new System.NotImplementedException();
     }
@@ -132,7 +132,7 @@ public abstract class MapBuilder
     public abstract void BuildGround();
     public abstract void BuildDecorations();
     public abstract void BuildStructures();
-    public abstract void SetExit();
+    public abstract void BuildExit();
     public GameMap GetMap()
     {
         return map;

@@ -38,6 +38,32 @@ public class MapFacade
         mapOperations = new MapModifier(map);
     }
 
+    public void BuildExit()
+    {
+        AssetProxy pr = new AssetProxy(typeof(GameObject));
+        GameObject exitTile = Object.Instantiate(pr.LoadAsset("Assets/Tiles/ExitTile.prefab"));
+        Vector2Int settings = StaticTestSettings.getMapSize();
+        int stX = settings.x;
+        int stY = settings.y;
+        bool exitExists = false;
+        for (int i = -stX/2; i < stX/2 && !exitExists; i++)
+        {
+            for (int j = -stY/2; j < stY/2 && !exitExists; j++)
+            {
+                if(tiles.GetIndoorTiles().Contains(mapOperations.GetGroundTile(new Vector3Int(i, j, 0))))
+                {
+                    if(Random.value < 0.02)
+                    {
+                        Debug.Log(exitTile.transform.position);
+                        exitTile.transform.Translate(new Vector3(i, j));
+                        exitTile.transform.Translate(new Vector3(0.5f, 0.5f));
+                        exitExists = true;
+                    }
+                }
+            }
+        }
+    }
+
     public void CreateDungeonInArea(Rect area)
     {
         CreateDungeon(globalMapRectangleConstructor.CreateRandomRectangleInArea(area));
@@ -91,10 +117,6 @@ public class MapFacade
 
         groundModifier.FillRect(area, getGround, tiles);
         groundModifier.GenerateFadeout(area, getGround, tiles, Mathf.CeilToInt((area.height + area.width) / 16));
-
-        AssetProxy pr = new AssetProxy(typeof(GameObject));
-        GameObject exitTile = Object.Instantiate(pr.LoadAsset("Assets/Tiles/ExitTile.prefab"));
-        exitTile.transform.position = new Vector3(0.5f, 0.5f, 0);
     }
 
     List<Vector3Int> CreateTunnelFromRoom(Rect room)

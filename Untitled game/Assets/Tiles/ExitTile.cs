@@ -2,42 +2,50 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
 
 public class ExitTile : MonoBehaviour
 {
-    
+    GameObject bossLink;
 
     [SerializeField]
     Sprite openStateSprite;
     [SerializeField]
     Sprite closedStateSprite;
-    GameObject bossEnemy;
     GameObject player;
     [SerializeField]
     float range;
     private ExitTileStateInterface state;
     private ClosedState closedState;
     private OpenedState openedState;
-    private bool bossSpawned;
+    private bool bossAlive;
+    SpriteRenderer rend;
 
     void SetState(ExitTileStateInterface newState)
     {
         state = newState;
+        if(newState == closedState)
+        {
+            rend.sprite = closedStateSprite;
+        }
+        else
+        {
+            rend.sprite = openStateSprite;
+        }
     }
 
     void Update()
     {
-        bossEnemy = GameObject.FindWithTag("Boss");
-
         float distance = (player.transform.position - transform.position).magnitude;
         if (distance < range)
         {
-            if (!bossSpawned)
+            if (!bossAlive)
             {
                 //spawn boss
-                state.PlayerInRange();
-                bossSpawned = true;
+                bossAlive = true;
+
+                state.PlayerInRange(transform);
             }
             if (distance < 1)
             {
@@ -45,19 +53,23 @@ public class ExitTile : MonoBehaviour
             }
         }
 
-        if(bossSpawned && bossEnemy == null)
+        bossLink = GameObject.FindWithTag("Boss");
+
+        if (bossAlive && bossLink == null)
         {
-            //SetState(openedState);
+            SetState(openedState);
+            bossAlive = false;
         }
 
     }
     void Start()
     {
-        bossSpawned = false;
+        rend = GetComponent<SpriteRenderer>();
+        bossAlive = false;
         player = GameObject.FindWithTag("Player");
         closedState = new ClosedState();
         openedState = new OpenedState();
-        state = closedState;
+        SetState(closedState);
     }
 }
 
@@ -65,27 +77,53 @@ public class ExitTile : MonoBehaviour
 public interface ExitTileStateInterface
 {
     void PlayerOnTile();
-    void PlayerInRange();
+    void PlayerInRange(Transform parentTransform);
 }
 
 public class OpenedState : ExitTileStateInterface
 {
-    public void PlayerInRange()
+    ParticleSystem particleSystem;
+    GameObject particles;
+    bool isPlaying;
+    public OpenedState()
     {
-        // Spawn particles
+        AssetProxy GameObjectLoader = new AssetProxy(typeof(GameObject));
+        particles = Object.Instantiate(GameObjectLoader.LoadAsset("Assets/Tiles/ExitTileParticles.prefab"));
+        particleSystem = particles.GetComponent<ParticleSystem>();
+        particleSystem.Stop();
+    }
+
+    public void PlayerInRange(Transform parentTransform)
+    {
+        if (!isPlaying)
+        {
+            particles.transform.position = parentTransform.position;
+            particleSystem.Play();
+            isPlaying = true;
+        }
     }
 
     public void PlayerOnTile()
     {
-        // load next level
+        SceneManager.LoadSceneAsync("SampleScene");
     }
 }
 
 public class ClosedState : ExitTileStateInterface
 {
-    public void PlayerInRange()
+    GameObject bossEnemy;
+
+    public ClosedState()
     {
-        Debug.Log("BOSS SPAWNING");
+        AssetProxy GameObjectLoader = new AssetProxy(typeof(GameObject));
+        bossEnemy = GameObjectLoader.LoadAsset("Assets/fish.prefab");
+        // redo to spawner
+    }
+
+    public void PlayerInRange(Transform parentTransform)
+    {
+        GameObject be = Object.Instantiate(bossEnemy, parentTransform);
+        be.tag = "Boss";
     }
 
     public void PlayerOnTile()
