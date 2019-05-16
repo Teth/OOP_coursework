@@ -1,8 +1,7 @@
 ﻿using UnityEngine;
 
 public class cameracontroll : MonoBehaviour
-{
-
+{    
     public Transform target;
 
     public float smooth_speed = 0.125F;

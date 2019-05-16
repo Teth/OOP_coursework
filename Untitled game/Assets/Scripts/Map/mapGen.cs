@@ -48,12 +48,10 @@ public class mapGen : MonoBehaviour
 
         MapGenerator mapGen = new MapGenerator(builder);
         mapGen.Generate();
-
+        builder.GetMap();
+        Spawner spawner = new Spawner();
+        spawner.Spawn(map, ts);
         System.TimeSpan timeItTook = System.DateTime.Now - start;
         Debug.Log(string.Format("Map generated, {0}",timeItTook));
-        AbstractEnemyFactory ratFactory = new RatFactory();
-        ratFactory.CreateMeleeEnemy();
     }
 }
-
-

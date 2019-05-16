@@ -7,13 +7,13 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     bool isPlayerAppeared;
-    EnemyController enemyController;
+    EnemyController enemyController { get; set; }
     public float speed;
     Rigidbody2D body;
     GameObject player;
     public int damage;
     public int health;
-    HealthController healthController;
+    HealthController healthController { get; set; }
     Vector2 playerLastEnterance;
     //
     public float agroRange;
@@ -22,7 +22,7 @@ public class Enemy : MonoBehaviour
     void Start()
     {
         isPlayerAppeared = false;
-        enemyController = new EnemyController(new MeleeRatController());
+        //enemyController = new EnemyController(new MeleeRatController());
         healthController = new HealthController(health);
         body = GetComponent<Rigidbody2D>();
         player = GameObject.FindWithTag("Player");
@@ -48,13 +48,14 @@ public class Enemy : MonoBehaviour
         return magnitude;
     }
 
-    public void SetParameters(float agroRange, float attackRange, EnemyController enemyController, int health, float speed)
+    public void SetParameters(float agroRange, float attackRange, EnemyController enemyController, int health, float speed, int damage)
     {
         this.agroRange = agroRange;
         this.attackRange = attackRange;
         this.enemyController = enemyController;
         this.health = health;
         this.speed = speed;
+        this.damage = damage;
     }
 
     // Update is called once per frame
@@ -99,7 +100,7 @@ public class Enemy : MonoBehaviour
     {
         if (collision.collider.tag == "Player")
         {
-            healthController.ReceiveDamage(((Player)collision.collider.GetComponent("Player")).damage);
+            healthController.ReceiveDamage(((Player)collision.collider.GetComponent<Player>()).damage);
         }
     }
 }
