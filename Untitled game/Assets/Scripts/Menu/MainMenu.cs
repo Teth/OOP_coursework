@@ -294,7 +294,6 @@ public class SubMenu : AbstractMenuComposite
     private void CreateButtons(List<AbstractMenuComposite> abstractMenus)
     {
         int size = abstractMenus.Count;
-        Debug.Log(canvas_ui.GetComponentsInChildren<Button>().Length);
         foreach (Button item in canvas_ui.GetComponentsInChildren<Button>())
         {
             Debug.Log(item.name);
