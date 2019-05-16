@@ -91,9 +91,11 @@ public class MapFacade
 
         groundModifier.FillRect(area, getGround, tiles);
         groundModifier.GenerateFadeout(area, getGround, tiles, Mathf.CeilToInt((area.height + area.width) / 16));
-    }
 
-    
+        AssetProxy pr = new AssetProxy(typeof(GameObject));
+        GameObject exitTile = Object.Instantiate(pr.LoadAsset("Assets/Tiles/ExitTile.prefab"));
+        exitTile.transform.position = new Vector3(0.5f, 0.5f, 0);
+    }
 
     List<Vector3Int> CreateTunnelFromRoom(Rect room)
     {
@@ -141,10 +143,6 @@ public class MapFacade
         }
         return tunnelTiles;
     }
-
-
-
-
     // private methods
     private void CreateVillage(Rect area)
     {
@@ -163,7 +161,6 @@ public class MapFacade
         }
     }
 
-
     private void CreateWalls(List<Vector3Int> tunnelTiles)
     {
         foreach (Vector3Int tile in tunnelTiles)
@@ -177,7 +174,6 @@ public class MapFacade
             }
         }
     }
-
 
     void CreateDungeon(Rect dungeonArea)
     {
@@ -203,5 +199,4 @@ public class MapFacade
         }
         CreateWalls(tilesToWallOff);
     }
-
 }

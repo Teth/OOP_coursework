@@ -51,6 +51,8 @@ public class mapGen : MonoBehaviour
 
         System.TimeSpan timeItTook = System.DateTime.Now - start;
         Debug.Log(System.String.Format("Map generated, {0}",timeItTook));
+
+        
     }
 }
 
