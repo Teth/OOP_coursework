@@ -100,7 +100,7 @@ public class Enemy : MonoBehaviour
     {
         if (collision.collider.tag == "Player")
         {
-            healthController.ReceiveDamage(((Player)collision.collider.GetComponent<Player>()).damage);
+            healthController.ReceiveDamage(collision.collider.GetComponent<Player>().damage);
         }
     }
 }

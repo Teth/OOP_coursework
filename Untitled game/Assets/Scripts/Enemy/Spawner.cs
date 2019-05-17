@@ -4,13 +4,26 @@ using UnityEngine;
 
 public class Spawner
 {
+    GameObject playerPrefab;
+    public Spawner()
+    {
+        AssetProxy prefabLoader = new AssetProxy(typeof(GameObject));
+        playerPrefab = prefabLoader.LoadAsset("Assets/Objects/Player/Player.prefab");
+    }
+
     public void Spawn(GameMap map, Tileset tileset)
     {
-        Locations mapType = StaticTestSettings.getLocation();
-        List<Vector2Int> spawnPositions = GetSpawnPositions(map, tileset);
+        Locations mapType = StaticTestSettings.getLocation();        
+
+        //now spawning player
+        GameObject player = Object.Instantiate(playerPrefab);
+        player.transform.position = GetPlayerSpawnPosition(map, tileset);
+
+        //now spawning enemies
+        List<Vector2Int> EnemiesSpawnPositions = GetEnemiesSpawnPositions(map, tileset);
         GameObject enemyObject;
         AbstractEnemyFactory enemyFactory;
-        foreach (var spawnPosition in spawnPositions)
+        foreach (var spawnPosition in EnemiesSpawnPositions)
         {
             enemyFactory = GetRandomFactoryOnLocation(mapType);
             enemyObject = IsEnemyRangedOrMelee() ? enemyFactory.CreateRangedEnemy() : enemyFactory.CreateMeleeEnemy();
@@ -18,7 +31,7 @@ public class Spawner
         }
 
     }
-    List<Vector2Int> GetSpawnPositions(GameMap map, Tileset tileset)
+    List<Vector2Int> GetEnemiesSpawnPositions(GameMap map, Tileset tileset)
     {
         List<Vector2Int> spawnPositions = new List<Vector2Int>();
         MapModifier mapModifier = new MapModifier(map);
@@ -61,8 +74,28 @@ public class Spawner
         }
         return new RatFactory();
     }
-    //IEnemyController GetCustomEnemyController()
-    //{
-    //    throw
-    //}
+    Vector2 GetPlayerSpawnPosition(GameMap map, Tileset tileset)
+    {
+        Rect spawnArea = new Rect(new Vector2(-map.sizeX / 2, -map.sizeY / 2), 
+            new Vector2(map.sizeX, map.sizeY));
+        spawnArea.xMin += map.sizeX / 10;   //  map.sizeX / 10 is offsetX
+        spawnArea.yMin += map.sizeY / 10;   //  map.sizeY / 10 is offsetY
+        spawnArea.width += map.sizeX / 5;
+        spawnArea.height += map.sizeY / 5;
+        List<Vector2> spawnCorners = new List<Vector2>()
+        {
+            new Vector2(spawnArea.min.x, spawnArea.min.y),
+            new Vector2(spawnArea.min.x, spawnArea.max.y),
+            new Vector2(spawnArea.max.x, spawnArea.min.y),
+            new Vector2(spawnArea.max.x, spawnArea.max.y)
+        };
+        MapModifier mapModifier = new MapModifier(map);
+        foreach (var corner in spawnCorners)
+        {
+            if (!tileset.GetStructureTiles().Contains(mapModifier.
+                GetStructureTile(new Vector3Int((int)corner.x, (int)corner.y, 0))))
+                return new Vector2((int) corner.x + 0.5f, (int) corner.y + 0.5f);
+        }
+        return Vector2Int.zero;
+    }
 }
