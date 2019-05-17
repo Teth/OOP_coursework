@@ -13,9 +13,13 @@ public class cameracontroll : MonoBehaviour
     {
         if (!isPlayerExists)
         {
-            target = GameObject.FindWithTag("Player").transform;
-            if (target)
-                isPlayerExists = true;
+            GameObject pl = GameObject.FindWithTag("Player");
+            if (pl)
+            {
+                target = GameObject.FindWithTag("Player").transform;
+                if (target)
+                    isPlayerExists = true;
+            }
         }
     }
     // Update is called once per frame
