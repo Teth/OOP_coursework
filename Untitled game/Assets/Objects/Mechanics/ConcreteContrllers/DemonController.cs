@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MeleeDemonController : IEnemyController
 {
-    public void Attack(Rigidbody2D body, int rotation)
+    public void Attack(Rigidbody2D body, int rotation, Vector2 direction)
     {
         body.rotation += rotation;
         body.velocity = Vector2.zero;
@@ -39,7 +39,7 @@ public class MeleeDemonController : IEnemyController
 }
 public class RangedDemonController : IEnemyController
 {
-    public void Attack(Rigidbody2D body, int rotation)
+    public void Attack(Rigidbody2D body, int rotation, Vector2 direction)
     {
         body.rotation += rotation;
         body.velocity = Vector2.zero;

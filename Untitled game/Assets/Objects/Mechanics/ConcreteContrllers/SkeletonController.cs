@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class MeleeSkeletonController : IEnemyController
 {
-    public void Attack(Rigidbody2D body, int rotation)
+    public void Attack(Rigidbody2D body, int damage, Vector2 direction)
     {
-        body.rotation += rotation;
+        body.rotation += damage;
         body.velocity = Vector2.zero;
     }
 
@@ -39,10 +39,20 @@ public class MeleeSkeletonController : IEnemyController
 }
 public class RangedSkeletonController : IEnemyController
 {
-    public void Attack(Rigidbody2D body, int rotation)
+    ProjectileFactory projectileFactory;
+
+    public RangedSkeletonController()
     {
-        body.rotation += rotation;
-        body.velocity = Vector2.zero;
+        projectileFactory = new ProjectileFactory();
+    }
+
+    public void Attack(Rigidbody2D body, int damage, Vector2 direction)
+    {
+        Debug.Log("Ranged skeletom attacks!");
+        GameObject enemyObject = projectileFactory.GetProjectile(EnemyType.Skeleton).GetProjectilePrefab();
+        GameObject gameObject = Object.Instantiate(enemyObject, body.transform);
+        gameObject.GetComponent<Rigidbody2D>().velocity = direction.normalized * enemyObject.GetComponent<Projectile>().speed;
+        WaitTimeForAttack();
     }
 
     public void Flee(Rigidbody2D body, float speed, Vector2 direction)
@@ -69,6 +79,13 @@ public class RangedSkeletonController : IEnemyController
         else
         {
             body.velocity = Vector2.zero;
+        }
+    }
+    IEnumerator WaitTimeForAttack()
+    {
+        for (; ; )
+        {            
+            yield return new WaitForSeconds(3f);
         }
     }
 }

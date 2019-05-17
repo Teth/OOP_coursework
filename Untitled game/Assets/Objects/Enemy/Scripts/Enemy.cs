@@ -13,7 +13,7 @@ public class Enemy : MonoBehaviour
     GameObject player;
     public int damage;
     public int health;
-    HealthController healthController { get; set; }
+    ProxyHealthController healthController { get; set; }
     Vector2 playerLastEnterance;
     //
     public float agroRange;
@@ -23,14 +23,14 @@ public class Enemy : MonoBehaviour
     {
         isPlayerAppeared = false;
         //enemyController = new EnemyController(new MeleeRatController());
-        healthController = new HealthController(health);
+        healthController = new ProxyHealthController(health);
         body = GetComponent<Rigidbody2D>();
         player = GameObject.FindWithTag("Player");
     }
 
     private bool IsWayToPlayerExists()
     {        
-        if(player!=null)
+        if (player!=null)
         {
             RaycastHit2D hit = Physics2D.Raycast(transform.position, GetDirectionToPlayer());
             if (hit.collider.tag == "Player")
@@ -66,7 +66,7 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (healthController.IsAlive)
+        if (healthController.healthController.IsAlive)
         {
             var vectorToPlayer = GetVectorToPlayer();
             var distanceToPlayer = GetVectorToPlayer().magnitude;            
@@ -74,7 +74,7 @@ public class Enemy : MonoBehaviour
             {
                 isPlayerAppeared = true;
                 playerLastEnterance = player.transform.position;
-                Debug.DrawLine(body.position, playerLastEnterance, Color.red, 1);
+                //Debug.DrawLine(body.position, playerLastEnterance, Color.red, 1);
                 if (distanceToPlayer > (int)attackRange)
                 {
                     enemyController.RotateToPlayer(transform, GetDirectionToPlayer());
@@ -86,7 +86,8 @@ public class Enemy : MonoBehaviour
                 //}
                 else
                 {
-                    enemyController.Attack(body, -5);
+
+                    enemyController.Attack(body, 10, GetVectorToPlayer().normalized);
                 }
             }
             else if (isPlayerAppeared)

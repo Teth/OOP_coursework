@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: NextLevelData
   m_EditorClassIdentifier: Assembly-CSharp::NextLevelData
-  gameData: {fileID: 0}
-  minSize: {x: 0, y: 0}
+  gameData: {fileID: 11400000, guid: df9a75519dc44e648ae4cc96dafec0c4, type: 2}
+  minSize: {x: 50, y: 50}
