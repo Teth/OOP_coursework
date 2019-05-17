@@ -13,7 +13,7 @@ public class NextLevelData : ScriptableObject
     Locations locations;
 
     MapType type;
-
+    
     Vector2Int mapsize;
 
     public void GenerateNextLevelData()
