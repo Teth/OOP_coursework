@@ -25,7 +25,6 @@ public class MapGenerator
 
 public class DungeonMapBuilder : MapBuilder
 {
-    int MAX_DUNGEONS = 2;
     MapFacade generator;
 
     public DungeonMapBuilder(Rect area, GameMap map, Tileset tileset) : base(area, map, tileset)
@@ -87,7 +86,6 @@ public class VillageMapBuilder : MapBuilder
 
 public class RuinsMapBuilder : MapBuilder
 {
-    int MAX_DUNGEONS = 2;
     MapFacade generator;
 
     public RuinsMapBuilder(Rect area, GameMap map, Tileset tileset) : base(area, map, tileset)

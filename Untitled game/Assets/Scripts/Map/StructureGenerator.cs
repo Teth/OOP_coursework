@@ -11,7 +11,7 @@ public class MapFacade
     Tileset tiles;
 
     const int DUNGEON_GENERATE_CYCLE = 10000;
-    const int TUNNELS_FROM_ROOM = 5;
+    const int TUNNELS_FROM_ROOM = 7;
     const int MAX_WIDTH = 13;
     const int MAX_HEIGHT = 15;
     const int MIN_WIDTH = 5;
@@ -45,23 +45,26 @@ public class MapFacade
         Vector2Int settings = StaticTestSettings.getMapSize();
         int stX = settings.x;
         int stY = settings.y;
-        bool exitExists = false;
-        for (int i = -stX/2; i < stX/2 && !exitExists; i++)
+        List<Vector3> availabeleExitLocation = new List<Vector3>();
+        for (int i = -stX/2; i < stX/2; i++)
         {
-            for (int j = -stY/2; j < stY/2 && !exitExists; j++)
+            for (int j = -stY/2; j < stY/2; j++)
             {
-                if(tiles.GetIndoorTiles().Contains(mapOperations.GetGroundTile(new Vector3Int(i, j, 0))))
+                if(tiles.GetIndoorTiles().Contains(mapOperations.GetGroundTile(new Vector3Int(i, j, 0))) && !tiles.GetStructureTiles().Contains(mapOperations.GetStructureTile(new Vector3Int(i, j, 0))))
                 {
-                    if(Random.value < 0.02)
+                    if(Random.value < 0.05)
                     {
-                        Debug.Log(exitTile.transform.position);
-                        exitTile.transform.Translate(new Vector3(i, j));
-                        exitTile.transform.Translate(new Vector3(0.5f, 0.5f));
-                        exitExists = true;
-                    }
+                        availabeleExitLocation.Add(new Vector3(i, j));
+                    }   
                 }
             }
         }
+        int exitLocationIndex = Random.Range(0, availabeleExitLocation.Count);
+        Debug.Log("Index " + exitLocationIndex);
+        Debug.Log("Count " + availabeleExitLocation.Count);
+        Vector3 exitLocation = availabeleExitLocation[exitLocationIndex];
+        exitTile.transform.Translate(exitLocation);
+        exitTile.transform.Translate(new Vector3(0.5f, 0.5f));
     }
 
     public void CreateDungeonInArea(Rect area)
@@ -137,9 +140,16 @@ public class MapFacade
         
         while (!connected)
         {
-            map.ground.SetTile(cursor, tiles.GetIndoorTile());
-            tunnelTiles.Add(cursor);
-            cursor = VectorOperations.MoveCursor(cursor, dir);
+            if(cursor.x > -map.sizeX/2 + 1 && cursor.x < map.sizeX / 2 - 1 && cursor.y > -map.sizeY / 2 + 1 && cursor.y < map.sizeY / 2 - 1)
+            {
+                map.ground.SetTile(cursor, tiles.GetIndoorTile());
+                tunnelTiles.Add(cursor);
+                cursor = VectorOperations.MoveCursor(cursor, dir);
+            }
+            else
+            {
+                connected = true;
+            }
 
             if (tiles.GetIndoorTiles().Contains(map.ground.GetTile(cursor)))
             {

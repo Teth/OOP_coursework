@@ -7,16 +7,30 @@ using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
 {
+
+    [SerializeField]
+    Animator animator;
     public GameObject buttonPrefab;
+
+    AsyncOperation async;
+
+    //public void AnimEnded()
+    //{
+    //    async.allowSceneActivation = true;
+    //}
 
     void Start()
     {
         Canvas canvas_ui = GetComponent<Canvas>();
+        animator = GetComponentInChildren<Animator>();
+
 
         //Actions
         Action start = () =>
         {
-            SceneManager.LoadScene("SampleScene");
+            animator.SetTrigger("LoadGame");
+            async = SceneManager.LoadSceneAsync("SampleScene");
+            //async.allowSceneActivation = false;
         };
         Action quit = () =>
         {

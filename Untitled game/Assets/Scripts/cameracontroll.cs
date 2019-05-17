@@ -21,7 +21,7 @@ public class cameracontroll : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (isPlayerExists)
+        if (isPlayerExists && target != null)
         {
             Vector2 mp = Input.mousePosition;
             Vector3 curp = Camera.main.ScreenToWorldPoint(mp);

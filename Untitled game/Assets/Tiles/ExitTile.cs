@@ -21,7 +21,7 @@ public class ExitTile : MonoBehaviour
     private OpenedState openedState;
     private bool bossAlive;
     bool isPlayerExists = false;
-    SpriteRenderer rend;
+    SpriteRenderer spRenderer;
 
     void SetState(ExitTileStateInterface newState)
     {
@@ -44,7 +44,7 @@ public class ExitTile : MonoBehaviour
             if (player)
                 isPlayerExists = true;
         }
-        else
+        else if (player != null)
         {
             float distance = (player.transform.position - transform.position).magnitude;
             if (distance < range)
@@ -93,9 +93,11 @@ public class OpenedState : ExitTileStateInterface
 {
     ParticleSystem particleSystem;
     GameObject particles;
+    GameData gameData;
     bool isPlaying;
     public OpenedState()
     {
+        gameData = new AssetProxy(typeof(GameData)).LoadAsset("Assets/Objects/Data.asset");
         AssetProxy GameObjectLoader = new AssetProxy(typeof(GameObject));
         particles = Object.Instantiate(GameObjectLoader.LoadAsset("Assets/Tiles/ExitTileParticles.prefab"));
         particleSystem = particles.GetComponent<ParticleSystem>();
@@ -115,6 +117,7 @@ public class OpenedState : ExitTileStateInterface
     public void PlayerOnTile()
     {
         Debug.Log("EXIT");
+        gameData.IncrementLevel();
         SceneManager.LoadScene("SampleScene");
     }
 }
@@ -126,7 +129,7 @@ public class ClosedState : ExitTileStateInterface
     public ClosedState()
     {
         AssetProxy GameObjectLoader = new AssetProxy(typeof(GameObject));
-        bossEnemy = GameObjectLoader.LoadAsset("Assets/fish.prefab");
+        bossEnemy = GameObjectLoader.LoadAsset("Assets/Objects/Enemy/Skeleton.prefab");
         // redo to spawner
     }
 
@@ -134,7 +137,7 @@ public class ClosedState : ExitTileStateInterface
     {
         GameObject bossEnemy = Object.Instantiate(this.bossEnemy, parentTransform);
         Enemy enemyBossScript = bossEnemy.GetComponent<Enemy>();
-        enemyBossScript.SetParameters(7, 5, new EnemyController(new MeleeRatController()), 50, 5, 10);
+        enemyBossScript.SetParameters(7, 5, new EnemyController(new MeleeSkeletonController()), 50, 5, 10);
         bossEnemy.tag = "Boss";
     }
 

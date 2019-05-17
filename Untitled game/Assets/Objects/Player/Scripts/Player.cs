@@ -10,7 +10,6 @@ public class Player : MonoBehaviour
     PlayerController playerController;    
     public float speed;
     Rigidbody2D body;
-    
     // Start is called before the first frame update
     void Start()
     {
@@ -31,7 +30,7 @@ public class Player : MonoBehaviour
         {
             body.rotation = 0;
             body.velocity = Vector2.zero;
-            Debug.Log("\n\nPlayer is DEAD\n\n");
+            Destroy(gameObject);
         }
     }
 

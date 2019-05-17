@@ -30,16 +30,21 @@ public class Enemy : MonoBehaviour
 
     private bool IsWayToPlayerExists()
     {        
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, GetDirectionToPlayer());
-        if (hit.collider.tag == "Player")
+        if(player!=null)
         {
-            return true;
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, GetDirectionToPlayer());
+            if (hit.collider.tag == "Player")
+            {
+                return true;
+            }
         }
         return false;
     }
     private Vector2 GetVectorToPlayer()
     {
-        return new Vector2(player.transform.position.x - body.position.x, player.transform.position.y - body.position.y);
+        if(player != null)
+            return new Vector2(player.transform.position.x - body.position.x, player.transform.position.y - body.position.y);
+        return Vector2.zero;
     }
     private Vector2 GetDirectionToPlayer()
     {

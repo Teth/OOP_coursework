@@ -1,16 +1,20 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Tilemaps;
 
 public class mapGen : MonoBehaviour
 {
+    NextLevelData nextLevelData;
 
     EdgeCollider2D edgeCollider;
 
     void Start()
     {
-        Vector2Int ms = StaticTestSettings.getMapSize();
+        nextLevelData = new AssetProxy(typeof(NextLevelData)).LoadAsset("Assets/Objects/NextLevelData.asset");
+        nextLevelData.GenerateNextLevelData();
+        Vector2Int ms = nextLevelData.GetMapSize();
         int MapSizeX = ms.x;
         int MapSizeY = ms.y;
 
@@ -25,10 +29,10 @@ public class mapGen : MonoBehaviour
         map.structures = GetComponentsInChildren<Tilemap>()[2];
 
         TilesetFactory tilesetFactory = new TilesetFactory();
-        Tileset ts = tilesetFactory.GetTileset(StaticTestSettings.getLocation());
+        Tileset ts = tilesetFactory.GetTileset(nextLevelData.GetLocation());
 
         MapBuilder builder;
-        MapType type = StaticTestSettings.GetMapType();
+        MapType type = nextLevelData.GetMapType();
         switch (type)
         {
             case MapType.Dungeon:

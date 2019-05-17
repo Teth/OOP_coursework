@@ -35,21 +35,22 @@ public class Spawner
     {
         List<Vector2Int> spawnPositions = new List<Vector2Int>();
         MapModifier mapModifier = new MapModifier(map);
+        GameData gameData = new AssetProxy(typeof(GameData)).LoadAsset("Assets/Objects/Data.asset");
         for (int x = -map.sizeX / 2; x < map.sizeX / 2; x++)
         {
             for (int y = -map.sizeY / 2; y < map.sizeY / 2; y++)
             {
-                if (tileset.GetIndoorTiles().Contains(mapModifier.GetGroundTile(new Vector3Int(x, y, 0))))
+                if (tileset.GetIndoorTiles().Contains(mapModifier.GetGroundTile(new Vector3Int(x, y, 0))) && !tileset.GetStructureTiles().Contains(mapModifier.GetStructureTile(new Vector3Int(x, y, 0))))
                 {
                     //spawn
-                    if (Random.value < 0.005)
-                    {
-                        Debug.Log(new Vector2Int(x, y));                        
+                    if (Random.value < gameData.GetSpawnRate())
+                    {                       
                         spawnPositions.Add(new Vector2Int(x, y));
                     }
                 }
             }
         }
+        Debug.Log("Spawn rate:" + gameData.GetSpawnRate());
         return spawnPositions;
     }
     /// <summary>
@@ -80,8 +81,8 @@ public class Spawner
             new Vector2(map.sizeX, map.sizeY));
         spawnArea.xMin += map.sizeX / 10;   //  map.sizeX / 10 is offsetX
         spawnArea.yMin += map.sizeY / 10;   //  map.sizeY / 10 is offsetY
-        spawnArea.width += map.sizeX / 5;
-        spawnArea.height += map.sizeY / 5;
+        spawnArea.width -= map.sizeX / 5;
+        spawnArea.height -= map.sizeY / 5;
         List<Vector2> spawnCorners = new List<Vector2>()
         {
             new Vector2(spawnArea.min.x, spawnArea.min.y),
@@ -94,7 +95,10 @@ public class Spawner
         {
             if (!tileset.GetStructureTiles().Contains(mapModifier.
                 GetStructureTile(new Vector3Int((int)corner.x, (int)corner.y, 0))))
-                return new Vector2((int) corner.x + 0.5f, (int) corner.y + 0.5f);
+            {
+                Debug.Log(new Vector2((int)corner.x + 0.5f, (int)corner.y + 0.5f));
+                return new Vector2((int)corner.x + 0.5f, (int)corner.y + 0.5f);
+            }
         }
         return Vector2Int.zero;
     }
