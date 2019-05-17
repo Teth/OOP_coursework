@@ -211,7 +211,7 @@ public class MainMenu : MonoBehaviour
         {
             animator.SetTrigger("LoadingGame");
 
-            SceneManager.LoadSceneAsync("LoadingScene");
+            SceneManager.LoadScene("LoadingScene");
         }
     }
 }

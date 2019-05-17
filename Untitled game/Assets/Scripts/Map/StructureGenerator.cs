@@ -52,7 +52,7 @@ public class MapFacade
             {
                 if(tiles.GetIndoorTiles().Contains(mapOperations.GetGroundTile(new Vector3Int(i, j, 0))) && !tiles.GetStructureTiles().Contains(mapOperations.GetStructureTile(new Vector3Int(i, j, 0))))
                 {
-                    if(Random.value < 0.05)
+                    if(Random.value < 0.1)
                     {
                         availabeleExitLocation.Add(new Vector3(i, j));
                     }   

@@ -26,6 +26,6 @@ public class GameData : ScriptableObject
 
     public float GetSpawnRate()
     {
-        return 0.0001f * Mathf.Pow(levelCleared,2);
+        return 0.001f * 2 * Mathf.Pow(levelCleared,0.5f);
     }
 }
