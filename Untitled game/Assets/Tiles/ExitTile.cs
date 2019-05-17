@@ -20,7 +20,8 @@ public class ExitTile : MonoBehaviour
     private ClosedState closedState;
     private OpenedState openedState;
     private bool bossAlive;
-    SpriteRenderer spRenderer;
+    bool isPlayerExists = false;
+    SpriteRenderer rend;
 
     void SetState(ExitTileStateInterface newState)
     {
@@ -36,31 +37,39 @@ public class ExitTile : MonoBehaviour
     }
 
     void Update()
-    {
-        float distance = (player.transform.position - transform.position).magnitude;
-        if (distance < range)
+    {        
+        if (!isPlayerExists)
         {
-            if (!bossAlive)
-            {
-                //spawn boss
-                bossAlive = true;
-
-                state.PlayerInRange(transform);
-            }
-            if (distance < 1)
-            {
-                state.PlayerOnTile();
-            }
+            player = GameObject.FindWithTag("Player");            
+            if (player)
+                isPlayerExists = true;
         }
-
-        bossLink = GameObject.FindWithTag("Boss");
-
-        if (bossAlive && bossLink == null)
+        else
         {
-            SetState(openedState);
-            bossAlive = false;
-        }
+            float distance = (player.transform.position - transform.position).magnitude;
+            if (distance < range)
+            {
+                if (!bossAlive)
+                {
+                    //spawn boss
+                    bossAlive = true;
 
+                    state.PlayerInRange(transform);
+                }
+                if (distance < 1)
+                {
+                    state.PlayerOnTile();
+                }
+            }
+
+            bossLink = GameObject.FindWithTag("Boss");
+
+            if (bossAlive && bossLink == null)
+            {
+                SetState(openedState);
+                bossAlive = false;
+            }
+        }        
     }
     void Start()
     {
@@ -105,7 +114,8 @@ public class OpenedState : ExitTileStateInterface
 
     public void PlayerOnTile()
     {
-        SceneManager.LoadSceneAsync("SampleScene");
+        Debug.Log("EXIT");
+        SceneManager.LoadScene("SampleScene");
     }
 }
 
@@ -122,8 +132,10 @@ public class ClosedState : ExitTileStateInterface
 
     public void PlayerInRange(Transform parentTransform)
     {
-        GameObject be = Object.Instantiate(bossEnemy, parentTransform);
-        be.tag = "Boss";
+        GameObject bossEnemy = Object.Instantiate(this.bossEnemy, parentTransform);
+        Enemy enemyBossScript = bossEnemy.GetComponent<Enemy>();
+        enemyBossScript.SetParameters(7, 5, new EnemyController(new MeleeRatController()), 50, 5, 10);
+        bossEnemy.tag = "Boss";
     }
 
     public void PlayerOnTile()

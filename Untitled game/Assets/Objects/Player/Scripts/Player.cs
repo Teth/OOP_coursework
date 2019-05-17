@@ -8,7 +8,7 @@ public class Player : MonoBehaviour
     public int health;
     HealthController healthController;
     PlayerController playerController;    
-    public float speed = 10;
+    public float speed;
     Rigidbody2D body;
     
     // Start is called before the first frame update

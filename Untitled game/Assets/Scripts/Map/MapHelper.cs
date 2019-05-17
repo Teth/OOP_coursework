@@ -173,7 +173,12 @@ public class MapModifier
     {
         this.gameMap = gameMap;
     }
-
+    /// <summary>
+    /// Deprecated
+    /// </summary>
+    /// <param name="tile"></param>
+    /// <param name="tileset"></param>
+    /// <returns></returns>
     public bool IsCorner(Vector3Int tile, Tileset tileset)
     {
         List<Vector3Int> list = VectorOperations.GetSurroundingTiles(tile);
