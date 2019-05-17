@@ -29,6 +29,7 @@ public class LoadingScreenControl : MonoBehaviour
 
         while(async.isDone == false)
         {
+            Debug.Log(async.progress);
             slider.value = async.progress;
             if(async.progress == 0.9f)
             {

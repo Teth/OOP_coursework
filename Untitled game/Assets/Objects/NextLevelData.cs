@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Data", menuName = "ScriptableObjects/NextLevelData", order = 1)]
+[CreateAssetMenu(fileName = "NextData", menuName = "ScriptableObjects/NextData", order = 2)]
 public class NextLevelData : ScriptableObject
 {
     [SerializeField]
     GameData gameData;
 
-    [SerializeField]
-    Vector2Int minSize;
+    Vector2Int minSize = new Vector2Int(30, 30);
 
     Locations locations;
 
@@ -39,3 +38,4 @@ public class NextLevelData : ScriptableObject
         return mapsize;
     }
 }
+
