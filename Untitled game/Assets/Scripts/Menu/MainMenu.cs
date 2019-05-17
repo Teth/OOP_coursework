@@ -12,12 +12,6 @@ public class MainMenu : MonoBehaviour
     Animator animator;
     public GameObject buttonPrefab;
 
-    AsyncOperation async;
-
-    //public void AnimEnded()
-    //{
-    //    async.allowSceneActivation = true;
-    //}
 
     void Start()
     {
@@ -29,8 +23,6 @@ public class MainMenu : MonoBehaviour
         Action start = () =>
         {
             animator.SetTrigger("LoadGame");
-            async = SceneManager.LoadSceneAsync("SampleScene");
-            //async.allowSceneActivation = false;
         };
         Action quit = () =>
         {
@@ -210,6 +202,17 @@ public class MainMenu : MonoBehaviour
         test.AddComponent(menuTop);
 
         menuTop.ClickOperation();
+    }
+
+    void Update()
+    {
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("LoadGame") &&
+                    animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+        {
+            animator.SetTrigger("LoadingGame");
+
+            SceneManager.LoadSceneAsync("LoadingScene");
+        }
     }
 }
 
