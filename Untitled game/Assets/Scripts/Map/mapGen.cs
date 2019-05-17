@@ -12,7 +12,7 @@ public class mapGen : MonoBehaviour
 
     void Start()
     {
-        nextLevelData = new AssetProxy(typeof(NextLevelData)).LoadAsset("Assets/Objects/NextLevelData.asset");
+        nextLevelData = new AssetProxy(typeof(NextLevelData)).LoadAsset("Assets/Objects/NextData.asset");
         nextLevelData.GenerateNextLevelData();
         Vector2Int ms = nextLevelData.GetMapSize();
         int MapSizeX = ms.x;
