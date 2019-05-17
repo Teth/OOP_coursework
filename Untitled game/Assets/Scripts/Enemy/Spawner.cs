@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+//strategy
 public class Spawner
 {
     GameObject playerPrefab;
@@ -13,54 +15,31 @@ public class Spawner
 
     public void Spawn(GameMap map, Tileset tileset)
     {
-        Locations mapType = StaticTestSettings.getLocation();        
-
-        //now spawning player
-        GameObject player = Object.Instantiate(playerPrefab);
-        player.transform.position = GetPlayerSpawnPosition(map, tileset);
-
-        //now spawning enemies
-        List<Vector2Int> EnemiesSpawnPositions = GetEnemiesSpawnPositions(map, tileset);
-        GameObject enemyObject;
-        AbstractEnemyFactory enemyFactory;
-        foreach (var spawnPosition in EnemiesSpawnPositions)
+        Locations mapType = StaticTestSettings.getLocation();
+        AbstractSpawner enemySpawner;
+        switch (mapType)
         {
-            enemyFactory = GetRandomFactoryOnLocation(mapType);
-            enemyObject = IsEnemyRangedOrMelee() ? enemyFactory.CreateRangedEnemy() : enemyFactory.CreateMeleeEnemy();
-            enemyObject.transform.position = new Vector2(spawnPosition.x + 0.5f, spawnPosition.y + 0.5f);
-        }
-
-    }
-    List<Vector2Int> GetEnemiesSpawnPositions(GameMap map, Tileset tileset)
-    {
-        List<Vector2Int> spawnPositions = new List<Vector2Int>();
-        MapModifier mapModifier = new MapModifier(map);
-        GameData gameData = new AssetProxy(typeof(GameData)).LoadAsset("Assets/Objects/Data.asset");
-        for (int x = -map.sizeX / 2; x < map.sizeX / 2; x++)
-        {
-            for (int y = -map.sizeY / 2; y < map.sizeY / 2; y++)
-            {
-                if (tileset.GetIndoorTiles().Contains(mapModifier.GetGroundTile(new Vector3Int(x, y, 0))) && !tileset.GetStructureTiles().Contains(mapModifier.GetStructureTile(new Vector3Int(x, y, 0))))
+            case Locations.Forest:
                 {
-                    //spawn
-                    if (Random.value < gameData.GetSpawnRate())
-                    {                       
-                        spawnPositions.Add(new Vector2Int(x, y));
-                    }
+                    enemySpawner = new ForestSpawner();
+                    enemySpawner.Spawn(map, tileset);
+                    break;
                 }
-            }
+            case Locations.Desert:
+                {
+                    enemySpawner = new DesertSpawner();
+                    enemySpawner.Spawn(map, tileset);
+                    break;
+                }
+            case Locations.Village:
+                {
+                    enemySpawner = new VillageSpawner();
+                    enemySpawner.Spawn(map, tileset);
+                    break;
+                }
         }
-        Debug.Log("Spawn rate:" + gameData.GetSpawnRate());
-        return spawnPositions;
     }
-    /// <summary>
-    /// If true enemy will be ranged, otherwise it will be false
-    /// </summary>
-    /// <returns></returns>
-    bool IsEnemyRangedOrMelee()
-    {
-        return Random.value < 0.5;
-    }
+    
     AbstractEnemyFactory GetRandomFactoryOnLocation(Locations location)
     {
         var randomFactor = Random.value;
@@ -75,9 +54,27 @@ public class Spawner
         }
         return new RatFactory();
     }
-    Vector2 GetPlayerSpawnPosition(GameMap map, Tileset tileset)
+}
+
+public abstract class AbstractSpawner
+{
+    protected GameObject playerPrefab;
+
+    public AbstractSpawner()
     {
-        Rect spawnArea = new Rect(new Vector2(-map.sizeX / 2, -map.sizeY / 2), 
+        AssetProxy prefabLoader = new AssetProxy(typeof(GameObject));
+        playerPrefab = prefabLoader.LoadAsset("Assets/Objects/Player/Player.prefab");
+    }
+
+    public abstract void Spawn(GameMap map, Tileset tileset);
+    protected bool IsEnemyRangedOrMelee()
+    {
+        return Random.value < 0.5;
+    }
+    protected Vector2 GetPlayerSpawnPosition(GameMap map, Tileset tileset)
+    {
+        //creating spawn rect for player
+        Rect spawnArea = new Rect(new Vector2(-map.sizeX / 2, -map.sizeY / 2),
             new Vector2(map.sizeX, map.sizeY));
         spawnArea.xMin += map.sizeX / 10;   //  map.sizeX / 10 is offsetX
         spawnArea.yMin += map.sizeY / 10;   //  map.sizeY / 10 is offsetY
@@ -101,5 +98,91 @@ public class Spawner
             }
         }
         return Vector2Int.zero;
+    }
+    protected List<Vector2Int> GetEnemiesSpawnPositions(GameMap map, Tileset tileset)
+    {
+        List<Vector2Int> spawnPositions = new List<Vector2Int>();
+        MapModifier mapModifier = new MapModifier(map);
+        GameData gameData = new AssetProxy(typeof(GameData)).LoadAsset("Assets/Objects/Data.asset");
+        for (int x = -map.sizeX / 2; x < map.sizeX / 2; x++)
+        {
+            for (int y = -map.sizeY / 2; y < map.sizeY / 2; y++)
+            {
+                if (tileset.GetIndoorTiles().Contains(mapModifier.GetGroundTile(new Vector3Int(x, y, 0)))
+                    && !tileset.GetStructureTiles().Contains(mapModifier.GetStructureTile(new Vector3Int(x, y, 0))))
+                {
+                    //spawn
+                    if (Random.value < gameData.GetSpawnRate())
+                    {
+                        spawnPositions.Add(new Vector2Int(x, y));
+                    }
+                }
+            }
+        }
+        Debug.Log("Spawn rate:" + gameData.GetSpawnRate());
+        return spawnPositions;
+    }
+}
+
+public class ForestSpawner : AbstractSpawner
+{
+    public override void Spawn(GameMap map, Tileset tileset)
+    {
+        //now spawning player
+        GameObject player = Object.Instantiate(playerPrefab);
+        player.transform.position = GetPlayerSpawnPosition(map, tileset);
+
+        //now spawning enemies
+        List<Vector2Int> EnemiesSpawnPositions = GetEnemiesSpawnPositions(map, tileset);
+        GameObject enemyObject;
+        AbstractEnemyFactory enemyFactory;
+        foreach (var spawnPosition in EnemiesSpawnPositions)
+        {
+            enemyFactory = (Random.value < 0.5) ? new RatFactory() : (AbstractEnemyFactory)new GnollFactory();
+            enemyObject = IsEnemyRangedOrMelee() ? enemyFactory.CreateRangedEnemy() : enemyFactory.CreateMeleeEnemy();
+            enemyObject.transform.position = new Vector2(spawnPosition.x + 0.5f, spawnPosition.y + 0.5f);
+        }
+    }
+}
+
+public class DesertSpawner : AbstractSpawner
+{
+    public override void Spawn(GameMap map, Tileset tileset)
+    {        
+        //now spawning player
+        GameObject player = Object.Instantiate(playerPrefab);
+        player.transform.position = GetPlayerSpawnPosition(map, tileset);
+
+        //now spawning enemies
+        List<Vector2Int> EnemiesSpawnPositions = GetEnemiesSpawnPositions(map, tileset);
+        GameObject enemyObject;
+        AbstractEnemyFactory enemyFactory;
+        foreach (var spawnPosition in EnemiesSpawnPositions)
+        {
+            enemyFactory = (Random.value < 0.5) ? new DemonFactory() : (AbstractEnemyFactory)new GnollFactory();
+            enemyObject = IsEnemyRangedOrMelee() ? enemyFactory.CreateRangedEnemy() : enemyFactory.CreateMeleeEnemy();
+            enemyObject.transform.position = new Vector2(spawnPosition.x + 0.5f, spawnPosition.y + 0.5f);
+        }
+    }
+}
+
+public class VillageSpawner : AbstractSpawner
+{
+    public override void Spawn(GameMap map, Tileset tileset)
+    {       
+        //now spawning player
+        GameObject player = Object.Instantiate(playerPrefab);
+        player.transform.position = GetPlayerSpawnPosition(map, tileset);
+
+        //now spawning enemies
+        List<Vector2Int> EnemiesSpawnPositions = GetEnemiesSpawnPositions(map, tileset);
+        GameObject enemyObject;
+        AbstractEnemyFactory enemyFactory;
+        foreach (var spawnPosition in EnemiesSpawnPositions)
+        {
+            enemyFactory = (Random.value < 0.5) ? new SkeletonFactory() : (AbstractEnemyFactory)new RatFactory();
+            enemyObject = IsEnemyRangedOrMelee() ? enemyFactory.CreateRangedEnemy() : enemyFactory.CreateMeleeEnemy();
+            enemyObject.transform.position = new Vector2(spawnPosition.x + 0.5f, spawnPosition.y + 0.5f);
+        }
     }
 }
