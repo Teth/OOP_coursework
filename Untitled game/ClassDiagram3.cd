@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="MapFacade">
+    <Position X="1.25" Y="0.5" Width="1.5" />
+    <AssociationLine Name="globalMapRectangleConstructor" Type="RandomRectangleConstructor">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.089" Y="0.31" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="decorationsModifier" Type="TilemapModifier">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.183" Y="-0.253" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="groundModifier" Type="TilemapModifier">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.256" Y="0.112" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="roomRectangleConstructor" Type="RandomRectangleConstructor">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.079" Y="-0.43" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="structuresModifier" Type="TilemapModifier">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.172" Y="-0.075" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AQAAEBAQAQAAgEADACACAAcAAgAAAAAACAKDoQBAAAA=</HashCode>
+      <FileName>Assets\Scripts\Map\StructureGenerator.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="globalMapRectangleConstructor" />
+      <Field Name="mapOperations" />
+      <Field Name="decorationsModifier" />
+      <Field Name="groundModifier" />
+      <Field Name="roomRectangleConstructor" />
+      <Field Name="structuresModifier" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="RandomRectangleConstructor" Collapsed="true">
+    <Position X="5.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAIAAABAAgAAAEAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Map\MapHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MapModifier" Collapsed="true">
+    <Position X="5.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAEAAAEAAAAAAAAAAAAAAAAAAAAAAEAAA=</HashCode>
+      <FileName>Assets\Scripts\Map\MapHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TilemapModifier" Collapsed="true">
+    <Position X="5.25" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAAIAAAAAAAQAAAgAAAAAAAAAAACAAAgAA=</HashCode>
+      <FileName>Assets\Scripts\Map\MapHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

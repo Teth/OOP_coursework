@@ -44,7 +44,8 @@ public class Spawner
                 {
                     //spawn
                     if (Random.value < gameData.GetSpawnRate())
-                    {                       
+                    {     
+                        Debug.Log("spawninng");
                         spawnPositions.Add(new Vector2Int(x, y));
                     }
                 }

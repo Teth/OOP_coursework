@@ -7,12 +7,14 @@ using UnityEngine.Tilemaps;
 public class mapGen : MonoBehaviour
 {
     NextLevelData nextLevelData;
-
+    GameData gamData;
     EdgeCollider2D edgeCollider;
 
     void Start()
     {
         nextLevelData = new AssetProxy(typeof(NextLevelData)).LoadAsset("Assets/Objects/NextData.asset");
+        gamData = new AssetProxy(typeof(GameData)).LoadAsset("Assets/Objects/Data.asset");        
+        
         nextLevelData.GenerateNextLevelData();
         Vector2Int ms = nextLevelData.GetMapSize();
         int MapSizeX = ms.x;
@@ -43,6 +45,7 @@ public class mapGen : MonoBehaviour
                 break;
             case MapType.Village:
                 builder = new VillageMapBuilder(new Rect(-MapSizeX / 2, -MapSizeY / 2, MapSizeX, MapSizeY), map);
+                ts = tilesetFactory.GetTileset(Locations.Village);
                 break;
             default:
                 builder = new DungeonMapBuilder(new Rect(-MapSizeX / 2, -MapSizeY / 2, MapSizeX, MapSizeY), map, ts);
