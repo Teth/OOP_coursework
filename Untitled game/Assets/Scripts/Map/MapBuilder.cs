@@ -80,7 +80,8 @@ public class VillageMapBuilder : MapBuilder
 
     public override void BuildExit()
     {
-        throw new System.NotImplementedException();
+        generator.BuildExit();
+
     }
 }
 
@@ -111,7 +112,8 @@ public class RuinsMapBuilder : MapBuilder
 
     public override void BuildExit()
     {
-        throw new System.NotImplementedException();
+        generator.BuildExit();
+
     }
 }
 

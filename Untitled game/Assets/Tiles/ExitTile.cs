@@ -20,18 +20,18 @@ public class ExitTile : MonoBehaviour
     private ClosedState closedState;
     private OpenedState openedState;
     private bool bossAlive;
-    SpriteRenderer rend;
+    SpriteRenderer spRenderer;
 
     void SetState(ExitTileStateInterface newState)
     {
         state = newState;
         if(newState == closedState)
         {
-            rend.sprite = closedStateSprite;
+            spRenderer.sprite = closedStateSprite;
         }
         else
         {
-            rend.sprite = openStateSprite;
+            spRenderer.sprite = openStateSprite;
         }
     }
 
@@ -64,7 +64,7 @@ public class ExitTile : MonoBehaviour
     }
     void Start()
     {
-        rend = GetComponent<SpriteRenderer>();
+        spRenderer = GetComponent<SpriteRenderer>();
         bossAlive = false;
         player = GameObject.FindWithTag("Player");
         closedState = new ClosedState();
