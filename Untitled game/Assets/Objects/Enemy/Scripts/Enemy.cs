@@ -86,7 +86,7 @@ public class Enemy : MonoBehaviour
                 //}
                 else
                 {
-                    enemyController.Attack(body, -5);
+                    enemyController.Attack(body, -5, GetDirectionToPlayer());
                 }
             }
             else if (isPlayerAppeared)

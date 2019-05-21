@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MeleeSkeletonController : IEnemyController
 {
-    public void Attack(Rigidbody2D body, int rotation)
+    public void Attack(Rigidbody2D body, int rotation, Vector2 direction)
     {
         body.rotation += rotation;
         body.velocity = Vector2.zero;
@@ -39,9 +39,12 @@ public class MeleeSkeletonController : IEnemyController
 }
 public class RangedSkeletonController : IEnemyController
 {
-    public void Attack(Rigidbody2D body, int rotation)
+    public void Attack(Rigidbody2D body, int rotation, Vector2 direction)
     {
-        body.rotation += rotation;
+        ProjectileFactory fac = new ProjectileFactory();
+        GameObject proj = Object.Instantiate(fac.GetProjectile(EnemyType.Skeleton).GetProjectilePrefab(),body.position,new Quaternion());
+        proj.GetComponent<Rigidbody2D>().velocity = direction * proj.GetComponent<Projectile>().speed;
+        proj.GetComponent<Rigidbody2D>().rotation = body.rotation;
         body.velocity = Vector2.zero;
     }
 

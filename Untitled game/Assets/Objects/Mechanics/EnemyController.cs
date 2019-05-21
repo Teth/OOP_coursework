@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface IEnemyController
 {
-    void Attack(Rigidbody2D body, int rotation);
+    void Attack(Rigidbody2D body, int rotation, Vector2 direction);
     void Move(Rigidbody2D body, float speed, Vector2 direction);
     void RotateToPlayer(Transform transform, Vector2 rotateDirection);
     void Flee(Rigidbody2D body, float speed, Vector2 direction);
@@ -19,9 +19,9 @@ public class EnemyController
     {
         enemyController = concreteEnemyController;
     }
-    public void Attack(Rigidbody2D body, int rotation)
+    public void Attack(Rigidbody2D body, int rotation, Vector2 direction)
     {
-        enemyController.Attack(body, rotation);
+        enemyController.Attack(body, rotation, direction);
     }
     public void Flee(Rigidbody2D body, float speed, Vector2 direction)
     {

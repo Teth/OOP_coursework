@@ -137,7 +137,7 @@ public class ClosedState : ExitTileStateInterface
     {
         GameObject bossEnemy = Object.Instantiate(this.bossEnemy, parentTransform);
         Enemy enemyBossScript = bossEnemy.GetComponent<Enemy>();
-        enemyBossScript.SetParameters(7, 5, new EnemyController(new MeleeSkeletonController()), 50, 5, 10);
+        enemyBossScript.SetParameters(7, 5, new EnemyController(new RangedSkeletonController()), 50, 5, 10);
         bossEnemy.tag = "Boss";
     }
 
