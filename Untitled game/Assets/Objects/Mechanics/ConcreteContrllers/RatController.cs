@@ -5,7 +5,7 @@ using UnityEngine;
 //Concrete Abstraction
 public class MeleeRatController : IEnemyController
 {
-    public void Attack(Rigidbody2D body, int rotation, Vector2 direction)
+    public void Attack(Rigidbody2D body, int rotation)
     {
         body.rotation += rotation;
         body.velocity = Vector2.zero;
@@ -40,7 +40,7 @@ public class MeleeRatController : IEnemyController
 }
 public class RangedRatController : IEnemyController
 {
-    public void Attack(Rigidbody2D body, int rotation, Vector2 direction)
+    public void Attack(Rigidbody2D body, int rotation)
     {
         body.rotation += rotation;
         body.velocity = Vector2.zero;
