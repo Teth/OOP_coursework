@@ -6,14 +6,14 @@ public class Player : MonoBehaviour
 {    
     public int damage;
     public int health;
-    HealthController healthController;
+    ProxyHealthController healthController;
     PlayerController playerController;    
     public float speed;
     Rigidbody2D body;
     // Start is called before the first frame update
     void Start()
     {
-        healthController = new HealthController(health);
+        healthController = new ProxyHealthController(health);
         playerController = new PlayerController();
         body = GetComponent<Rigidbody2D>();        
     }
@@ -21,7 +21,7 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (healthController.IsAlive)
+        if (healthController.healthController.IsAlive)
         {
             playerController.MoveCharacter(body, speed);
             playerController.MouseRotation(transform);
@@ -38,7 +38,11 @@ public class Player : MonoBehaviour
     {
         if (collision.collider.tag == "Enemy")
         {
-            healthController.ReceiveDamage(((Enemy) collision.collider.GetComponent("Enemy")).damage);
+            healthController.ReceiveDamage(collision.collider.GetComponent<Enemy>().damage);
+        }
+        else if (collision.collider.tag == "Projectile")
+        {
+            healthController.ReceiveDamage(collision.collider.GetComponent<Projectile>().damage);
         }
     }
 }
