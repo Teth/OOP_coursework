@@ -19,7 +19,7 @@ public static class Tiles
     {
         if (Random.value > defectChance)
         {
-            int c = Mathf.FloorToInt(Random.value * tiles.Count);
+            int c = Random.Range(0, tiles.Count - 1);
             return tiles[c];
         }
         return tiles[0];

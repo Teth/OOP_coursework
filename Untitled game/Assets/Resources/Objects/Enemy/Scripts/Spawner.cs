@@ -10,7 +10,7 @@ public class Spawner
     public Spawner()
     {
         AssetProxy prefabLoader = new AssetProxy(typeof(GameObject));
-        playerPrefab = prefabLoader.LoadAsset("Assets/Objects/Player/Player.prefab");
+        playerPrefab = prefabLoader.LoadAsset("Objects/Player/Player.prefab");
     }
 
     public void Spawn(GameMap map, Tileset tileset)
@@ -63,7 +63,7 @@ public abstract class AbstractSpawner
     public AbstractSpawner()
     {
         AssetProxy prefabLoader = new AssetProxy(typeof(GameObject));
-        playerPrefab = prefabLoader.LoadAsset("Assets/Objects/Player/Player.prefab");
+        playerPrefab = prefabLoader.LoadAsset("Objects/Player/Player.prefab");
     }
 
     public abstract void Spawn(GameMap map, Tileset tileset);
@@ -103,7 +103,7 @@ public abstract class AbstractSpawner
     {
         List<Vector2Int> spawnPositions = new List<Vector2Int>();
         MapModifier mapModifier = new MapModifier(map);
-        GameData gameData = new AssetProxy(typeof(GameData)).LoadAsset("Assets/Objects/Data.asset");
+        GameData gameData = new AssetProxy(typeof(GameData)).LoadAsset("Objects/Data.asset");
         for (int x = -map.sizeX / 2; x < map.sizeX / 2; x++)
         {
             for (int y = -map.sizeY / 2; y < map.sizeY / 2; y++)

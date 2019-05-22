@@ -56,9 +56,8 @@ public class DungeonMapBuilder : MapBuilder
 public class VillageMapBuilder : MapBuilder
 {
     MapFacade generator;
-    public VillageMapBuilder(Rect area, GameMap map) : base(area, map, null)
+    public VillageMapBuilder(Rect area, GameMap map, Tileset tileset) : base(area, map, tileset)
     {
-        tileset = new TilesetFactory().GetTileset(Locations.Village);
         generator = new MapFacade(map, tileset);
     }
 

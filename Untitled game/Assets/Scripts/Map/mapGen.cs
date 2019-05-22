@@ -12,9 +12,9 @@ public class mapGen : MonoBehaviour
 
     void Start()
     {
-        nextLevelData = new AssetProxy(typeof(NextLevelData)).LoadAsset("Assets/Objects/NextData.asset");
-        gamData = new AssetProxy(typeof(GameData)).LoadAsset("Assets/Objects/Data.asset");        
-        
+        nextLevelData = new AssetProxy(typeof(NextLevelData)).LoadAsset("Objects/NextData.asset");
+        gamData = new AssetProxy(typeof(GameData)).LoadAsset("Objects/Data.asset");
+        Debug.Log(nextLevelData);
         nextLevelData.GenerateNextLevelData();
         Vector2Int ms = nextLevelData.GetMapSize();
         int MapSizeX = ms.x;
@@ -30,10 +30,29 @@ public class mapGen : MonoBehaviour
         map.decorations = GetComponentsInChildren<Tilemap>()[1];
         map.structures = GetComponentsInChildren<Tilemap>()[2];
 
-        TilesetFactory tilesetFactory = new TilesetFactory();
-        Tileset ts = tilesetFactory.GetTileset(nextLevelData.GetLocation());
+        TilesetCreator tilesetCreator;
+
+        Locations location = nextLevelData.GetLocation();
+        switch (location)
+        {
+            case Locations.Forest:
+                tilesetCreator = new ForestTilesetCreator();
+                break;
+            case Locations.Desert:
+                tilesetCreator = new DesertTilesetCreator();
+                break;
+            case Locations.Village:
+                tilesetCreator = new VillageTilesetCreator();
+                break;
+            default:
+                tilesetCreator = new ForestTilesetCreator();
+                break;
+        }
+
+        Tileset ts = tilesetCreator.CreateTileset();
 
         MapBuilder builder;
+
         MapType type = nextLevelData.GetMapType();
         switch (type)
         {
@@ -44,14 +63,16 @@ public class mapGen : MonoBehaviour
                 builder = new RuinsMapBuilder(new Rect(-MapSizeX / 2, -MapSizeY / 2, MapSizeX, MapSizeY), map, ts);
                 break;
             case MapType.Village:
-                builder = new VillageMapBuilder(new Rect(-MapSizeX / 2, -MapSizeY / 2, MapSizeX, MapSizeY), map);
-                ts = tilesetFactory.GetTileset(Locations.Village);
+                tilesetCreator = new VillageTilesetCreator();
+                ts = tilesetCreator.CreateTileset();
+                builder = new VillageMapBuilder(new Rect(-MapSizeX / 2, -MapSizeY / 2, MapSizeX, MapSizeY), map, ts);
                 break;
             default:
                 builder = new DungeonMapBuilder(new Rect(-MapSizeX / 2, -MapSizeY / 2, MapSizeX, MapSizeY), map, ts);
                 break;
         }
         //MapBuilder builder = new VillageMapBuilder(new Rect(-MapSizeX / 2, -MapSizeY / 2, MapSizeX, MapSizeY), map);
+
 
         MapGenerator mapGen = new MapGenerator(builder);
         mapGen.Generate();

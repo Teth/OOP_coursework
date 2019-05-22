@@ -34,8 +34,8 @@ public class RatFactory : AbstractEnemyFactory
     public RatFactory()
     {
         AssetProxy prefabLoader = new AssetProxy(typeof(GameObject));
-        meleePrefab = prefabLoader.LoadAsset("Assets/Objects/Enemy/Rat.prefab");
-        rangedPrefab = prefabLoader.LoadAsset("Assets/Objects/Enemy/Rat.prefab");
+        meleePrefab = prefabLoader.LoadAsset("Objects/Enemy/Rat.prefab");
+        rangedPrefab = prefabLoader.LoadAsset("Objects/Enemy/Rat.prefab");
     }
     public override GameObject CreateMeleeEnemy()
     {
@@ -71,8 +71,8 @@ public class DemonFactory : AbstractEnemyFactory
     public DemonFactory()
     {
         AssetProxy prefabLoader = new AssetProxy(typeof(GameObject));
-        meleePrefab = prefabLoader.LoadAsset("Assets/Objects/Enemy/Demon.prefab");
-        rangedPrefab = prefabLoader.LoadAsset("Assets/Objects/Enemy/Demon.prefab");
+        meleePrefab = prefabLoader.LoadAsset("Objects/Enemy/Demon.prefab");
+        rangedPrefab = prefabLoader.LoadAsset("Objects/Enemy/Demon.prefab");
     }
 
     public override GameObject CreateMeleeEnemy()
@@ -108,8 +108,8 @@ public class GnollFactory : AbstractEnemyFactory
     public GnollFactory()
     {
         AssetProxy prefabLoader = new AssetProxy(typeof(GameObject));
-        meleePrefab = prefabLoader.LoadAsset("Assets/Objects/Enemy/Gnoll.prefab");
-        rangedPrefab = prefabLoader.LoadAsset("Assets/Objects/Enemy/Gnoll.prefab");
+        meleePrefab = prefabLoader.LoadAsset("Objects/Enemy/Gnoll.prefab");
+        rangedPrefab = prefabLoader.LoadAsset("Objects/Enemy/Gnoll.prefab");
     }
 
     public override GameObject CreateMeleeEnemy()
@@ -145,8 +145,8 @@ public class SkeletonFactory : AbstractEnemyFactory
     public SkeletonFactory()
     {
         AssetProxy prefabLoader = new AssetProxy(typeof(GameObject));
-        meleePrefab = prefabLoader.LoadAsset("Assets/Objects/Enemy/Skeleton.prefab");
-        rangedPrefab = prefabLoader.LoadAsset("Assets/Objects/Enemy/Skeleton.prefab");
+        meleePrefab = prefabLoader.LoadAsset("Objects/Enemy/Skeleton.prefab");
+        rangedPrefab = prefabLoader.LoadAsset("Objects/Enemy/Skeleton.prefab");
     }
 
     public override GameObject CreateMeleeEnemy()

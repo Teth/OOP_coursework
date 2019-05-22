@@ -97,9 +97,9 @@ public class OpenedState : ExitTileStateInterface
     bool isPlaying;
     public OpenedState()
     {
-        gameData = new AssetProxy(typeof(GameData)).LoadAsset("Assets/Objects/Data.asset");
+        gameData = new AssetProxy(typeof(GameData)).LoadAsset("Objects/Data.asset");
         AssetProxy GameObjectLoader = new AssetProxy(typeof(GameObject));
-        particles = Object.Instantiate(GameObjectLoader.LoadAsset("Assets/Tiles/ExitTileParticles.prefab"));
+        particles = Object.Instantiate(GameObjectLoader.LoadAsset("Objects/Tiles/ExitTileParticles.prefab"));
         particleSystem = particles.GetComponent<ParticleSystem>();
         particleSystem.Stop();
     }
@@ -129,7 +129,7 @@ public class ClosedState : ExitTileStateInterface
     public ClosedState()
     {
         AssetProxy GameObjectLoader = new AssetProxy(typeof(GameObject));
-        bossEnemy = GameObjectLoader.LoadAsset("Assets/Objects/Enemy/Skeleton.prefab");
+        bossEnemy = GameObjectLoader.LoadAsset("Objects/Enemy/Skeleton.prefab");
         // redo to spawner
     }
 

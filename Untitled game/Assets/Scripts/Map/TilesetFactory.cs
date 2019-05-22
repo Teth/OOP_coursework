@@ -4,22 +4,40 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 // FACTORY pattern
 
-public class TilesetFactory
+
+public abstract class TilesetCreator
 {
-    Dictionary<Locations, Tileset> tilesets = new Dictionary<Locations, Tileset>();
+    public abstract ITileset GetITileset();
 
-    public TilesetFactory()
+    public Tileset CreateTileset()
     {
-        tilesets.Add(Locations.Forest, new Tileset(new ForestTileset()));
-        tilesets.Add(Locations.Desert, new Tileset(new DesertTileset()));
-        tilesets.Add(Locations.Village, new Tileset(new VillageTileset()));
-    }
-
-    public Tileset GetTileset(Locations key)
-    {
-        if (tilesets.ContainsKey(key))
-            return tilesets[key];
-        else
-            return null;
+        ITileset ts = GetITileset();
+        return new Tileset(ts);
     }
 }
+
+public class ForestTilesetCreator : TilesetCreator
+{
+    public override ITileset GetITileset()
+    {
+        return new ForestTileset();
+    }
+}
+
+public class DesertTilesetCreator : TilesetCreator
+{
+    public override ITileset GetITileset()
+    {
+        return new DesertTileset();
+    }
+}
+
+
+public class VillageTilesetCreator : TilesetCreator
+{
+    public override ITileset GetITileset()
+    {
+        return new VillageTileset();
+    }
+}
+

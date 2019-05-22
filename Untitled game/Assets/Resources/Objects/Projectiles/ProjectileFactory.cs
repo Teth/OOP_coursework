@@ -37,7 +37,7 @@ public class RatProjectile : AbstractProjectile
     public RatProjectile(float speed)
     {        
         AssetProxy prefabLoader = new AssetProxy(typeof(GameObject));
-        projectilePrefab = prefabLoader.LoadAsset("Assets/Objects/Projectiles/Goo.prefab");        
+        projectilePrefab = prefabLoader.LoadAsset("Objects/Projectiles/Goo.prefab");        
         projectilePrefab.GetComponent<Projectile>().speed = speed;
     }    
 }
@@ -47,7 +47,7 @@ public class GnollProjectile : AbstractProjectile
     public GnollProjectile(float speed)
     {        
         AssetProxy prefabLoader = new AssetProxy(typeof(GameObject));
-        projectilePrefab = prefabLoader.LoadAsset("Assets/Objects/Projectiles/Bullet.prefab");        
+        projectilePrefab = prefabLoader.LoadAsset("Objects/Projectiles/Bullet.prefab");        
         projectilePrefab.GetComponent<Projectile>().speed = speed;
     }
 }
@@ -56,7 +56,7 @@ public class DemonProjectile : AbstractProjectile
     public DemonProjectile(float speed)
     {      
         AssetProxy prefabLoader = new AssetProxy(typeof(GameObject));
-        projectilePrefab = prefabLoader.LoadAsset("Assets/Objects/Projectiles/Fireball.prefab");
+        projectilePrefab = prefabLoader.LoadAsset("Objects/Projectiles/Fireball.prefab");
         projectilePrefab.GetComponent<Projectile>().speed = speed;
     }
 }
@@ -65,7 +65,7 @@ public class SkeletonProjectile : AbstractProjectile
     public SkeletonProjectile(float speed)
     {        
         AssetProxy prefabLoader = new AssetProxy(typeof(GameObject));
-        projectilePrefab = prefabLoader.LoadAsset("Assets/Objects/Projectiles/Bone.prefab");
+        projectilePrefab = prefabLoader.LoadAsset("Objects/Projectiles/Bone.prefab");
         projectilePrefab.GetComponent<Projectile>().speed = speed;
     }
 }

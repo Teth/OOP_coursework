@@ -94,21 +94,21 @@ public class ForestTileset : ITileset
         decorationsInside = new List<TileBase>();
         decorationsOutside = new List<TileBase>();
         AssetProxy tileProxy = new AssetProxy(typeof(TileBase));
-        decorationsInside.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/decoration_dungeon.asset"));
-        decorationsInside.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/decoration_dungeon1.asset"));
-        decorationsInside.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/decoration_dungeon2.asset"));
-        decorationsInside.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/decoration_dungeon3.asset"));
-        decorationsOutside.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/decoration_outdoor.asset"));
-        ground.Add(tileProxy.LoadAsset("Assets/Tiles/Shared/ground.asset"));
-        ground.Add(tileProxy.LoadAsset("Assets/Tiles/Shared/ground1.asset"));
-        indoorGround.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/stone_floor.asset"));
-        indoorGround.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/stone_deco1.asset"));
-        indoorGround.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/stone_deco2.asset"));
-        indoorGround.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/stone_deco3.asset"));
-        indoorGround.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/stone_deco4.asset"));
-        indoorGround.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/stone_deco5.asset"));
-        indoorGround.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/stone_deco6.asset"));
-        structures.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/stone.asset"));
+        decorationsInside.Add(tileProxy.LoadAsset("Objects/Tiles/Forest/decoration_dungeon.asset"));
+        decorationsInside.Add(tileProxy.LoadAsset("Objects/Tiles/Forest/decoration_dungeon1.asset"));
+        decorationsInside.Add(tileProxy.LoadAsset("Objects/Tiles/Forest/decoration_dungeon2.asset"));
+        decorationsInside.Add(tileProxy.LoadAsset("Objects/Tiles/Forest/decoration_dungeon3.asset"));
+        decorationsOutside.Add(tileProxy.LoadAsset("Objects/Tiles/Forest/decoration_outdoor.asset"));
+        ground.Add(tileProxy.LoadAsset("Objects/Tiles/Shared/ground.asset"));
+        ground.Add(tileProxy.LoadAsset("Objects/Tiles/Shared/ground1.asset"));
+        indoorGround.Add(tileProxy.LoadAsset("Objects/Tiles/Forest/stone_floor.asset"));
+        indoorGround.Add(tileProxy.LoadAsset("Objects/Tiles/Forest/stone_deco1.asset"));
+        indoorGround.Add(tileProxy.LoadAsset("Objects/Tiles/Forest/stone_deco2.asset"));
+        indoorGround.Add(tileProxy.LoadAsset("Objects/Tiles/Forest/stone_deco3.asset"));
+        indoorGround.Add(tileProxy.LoadAsset("Objects/Tiles/Forest/stone_deco4.asset"));
+        indoorGround.Add(tileProxy.LoadAsset("Objects/Tiles/Forest/stone_deco5.asset"));
+        indoorGround.Add(tileProxy.LoadAsset("Objects/Tiles/Forest/stone_deco6.asset"));
+        structures.Add(tileProxy.LoadAsset("Objects/Tiles/Forest/stone.asset"));
     }
 
     public TileBase GetDecorationTile(bool isIndoors)
@@ -182,19 +182,19 @@ public class DesertTileset : ITileset
         decorationsOutside = new List<TileBase>();
         decorationsInside = new List<TileBase>();
         AssetProxy tileProxy = new AssetProxy(typeof(TileBase));
-        ground.Add(tileProxy.LoadAsset("Assets/Tiles/Desert/desert.asset"));
-        ground.Add(tileProxy.LoadAsset("Assets/Tiles/Desert/desert2.asset"));
-        ground.Add(tileProxy.LoadAsset("Assets/Tiles/Desert/desert3.asset"));
-        decorationsInside.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/decoration_dungeon3.asset"));
-        decorationsOutside.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/decoration_outdoor.asset"));
-        indoorGround.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/stone_floor.asset"));
-        indoorGround.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/stone_deco1.asset"));
-        indoorGround.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/stone_deco2.asset"));
-        indoorGround.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/stone_deco3.asset"));
-        indoorGround.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/stone_deco4.asset"));
-        indoorGround.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/stone_deco5.asset"));
-        indoorGround.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/stone_deco6.asset"));
-        structures.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/stone.asset"));
+        ground.Add(tileProxy.LoadAsset("Objects/Tiles/Desert/desert.asset"));
+        ground.Add(tileProxy.LoadAsset("Objects/Tiles/Desert/desert2.asset"));
+        ground.Add(tileProxy.LoadAsset("Objects/Tiles/Desert/desert3.asset"));
+        decorationsInside.Add(tileProxy.LoadAsset("Objects/Tiles/Forest/decoration_dungeon3.asset"));
+        decorationsOutside.Add(tileProxy.LoadAsset("Objects/Tiles/Forest/decoration_outdoor.asset"));
+        indoorGround.Add(tileProxy.LoadAsset("Objects/Tiles/Forest/stone_floor.asset"));
+        indoorGround.Add(tileProxy.LoadAsset("Objects/Tiles/Forest/stone_deco1.asset"));
+        indoorGround.Add(tileProxy.LoadAsset("Objects/Tiles/Forest/stone_deco2.asset"));
+        indoorGround.Add(tileProxy.LoadAsset("Objects/Tiles/Forest/stone_deco3.asset"));
+        indoorGround.Add(tileProxy.LoadAsset("Objects/Tiles/Forest/stone_deco4.asset"));
+        indoorGround.Add(tileProxy.LoadAsset("Objects/Tiles/Forest/stone_deco5.asset"));
+        indoorGround.Add(tileProxy.LoadAsset("Objects/Tiles/Forest/stone_deco6.asset"));
+        structures.Add(tileProxy.LoadAsset("Objects/Tiles/Forest/stone.asset"));
 
     }
 
@@ -270,12 +270,12 @@ public class VillageTileset : ITileset
         decorationsOutside = new List<TileBase>();
         decorationsInside = new List<TileBase>();
         AssetProxy tileProxy = new AssetProxy(typeof(TileBase));
-        ground.Add(tileProxy.LoadAsset("Assets/Tiles/Shared/ground.asset"));
-        ground.Add(tileProxy.LoadAsset("Assets/Tiles/Shared/ground1.asset"));
-        decorationsInside.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/decoration_dungeon3.asset"));
-        decorationsOutside.Add(tileProxy.LoadAsset("Assets/Tiles/Forest/decoration_outdoor.asset"));
-        indoorGround.Add(tileProxy.LoadAsset("Assets/Tiles/Village/village_floor.asset"));
-        structures.Add(tileProxy.LoadAsset("Assets/Tiles/Village/village_wall.asset"));
+        ground.Add(tileProxy.LoadAsset("Objects/Tiles/Shared/ground.asset"));
+        ground.Add(tileProxy.LoadAsset("Objects/Tiles/Shared/ground1.asset"));
+        decorationsInside.Add(tileProxy.LoadAsset("Objects/Tiles/Forest/decoration_dungeon3.asset"));
+        decorationsOutside.Add(tileProxy.LoadAsset("Objects/Tiles/Forest/decoration_outdoor.asset"));
+        indoorGround.Add(tileProxy.LoadAsset("Objects/Tiles/Village/village_floor.asset"));
+        structures.Add(tileProxy.LoadAsset("Objects/Tiles/Village/village_wall.asset"));
     }
 
 

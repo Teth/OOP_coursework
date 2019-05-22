@@ -11,12 +11,12 @@ public class MainMenu : MonoBehaviour
     [SerializeField]
     Animator animator;
     public GameObject buttonPrefab;
+    AsyncOperation async;
 
-
-    void Start()
+void Start()
     {
         Canvas canvas_ui = GetComponent<Canvas>();
-        animator = GetComponentInChildren<Animator>();
+        animator = GameObject.Find("Fader").GetComponentInChildren<Animator>();
 
 
         //Actions
@@ -207,12 +207,21 @@ public class MainMenu : MonoBehaviour
     void Update()
     {
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("LoadGame") &&
-                    animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+                    animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.3f)
         {
-            animator.SetTrigger("LoadingGame");
-
-            SceneManager.LoadScene("LoadingScene");
+            if (async == null)
+            {
+                async = SceneManager.LoadSceneAsync("LoadingScene");
+                async.allowSceneActivation = false;
+                animator.SetTrigger("LoadingGame");
+            }   
         }
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("black") &&
+                    animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.3f)
+        {
+            async.allowSceneActivation = true;
+        }
+
     }
 }
 

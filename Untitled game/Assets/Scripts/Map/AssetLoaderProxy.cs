@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEditor;
 using UnityEngine;
 // proxy pattern
@@ -15,11 +16,12 @@ public class AssetProxy
 
     public dynamic LoadAsset(string path)
     {
-        if(!string.IsNullOrEmpty(AssetDatabase.AssetPathToGUID(path)))
+        if(File.Exists(Application.dataPath + "/Resources/" + path))
         {
-            return loader.LoadAsset(path);
+            return loader.LoadAsset(Path.ChangeExtension(path,null));
         }
-        throw new System.Exception(string.Format("No asset at path" + path));
+
+        throw new System.Exception(string.Format("No asset at path " + path));
     }
     
 }
@@ -35,6 +37,7 @@ public class AssetLoader
 
     internal dynamic LoadAsset(string path)
     {
-        return AssetDatabase.LoadAssetAtPath(path, type);
+        Object obj = Resources.Load(path, type);
+        return obj;
     }
 }

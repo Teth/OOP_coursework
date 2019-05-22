@@ -41,7 +41,7 @@ public class MapFacade
     public void BuildExit()
     {
         AssetProxy pr = new AssetProxy(typeof(GameObject));
-        GameObject exitTile = Object.Instantiate(pr.LoadAsset("Assets/Tiles/ExitTile.prefab"));
+        GameObject exitTile = Object.Instantiate(pr.LoadAsset("Objects/Tiles/ExitTile.prefab"));
         Vector2Int settings = StaticTestSettings.getMapSize();
         int stX = settings.x;
         int stY = settings.y;
