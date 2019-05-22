@@ -5,8 +5,6 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "NextData", menuName = "ScriptableObjects/NextData", order = 2)]
 public class NextLevelData : ScriptableObject
 {
-    [SerializeField]
-    GameData gameData;
 
     Vector2Int minSize = new Vector2Int(30, 30);
 
@@ -20,7 +18,7 @@ public class NextLevelData : ScriptableObject
     {
         locations = (Locations)Random.Range(0, 3);
         type = (MapType)Random.Range(0, 3);
-        mapsize = new Vector2Int(minSize.x + (int)(gameData.LevelCleared() * 1.3), minSize.y + (int)(gameData.LevelCleared() * 1.3));
+        mapsize = new Vector2Int(minSize.x + (int)(PlayerPrefs.GetInt("LevelCleared") * 1.3), minSize.y + (int)(PlayerPrefs.GetInt("LevelCleared") * 1.3));
     }
 
     public Locations GetLocation()

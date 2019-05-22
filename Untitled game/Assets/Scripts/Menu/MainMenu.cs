@@ -22,6 +22,11 @@ void Start()
         //Actions
         Action start = () =>
         {
+            PlayerPrefs.SetInt("LevelCleared", 0);
+            animator.SetTrigger("LoadGame");
+        };
+        Action load = () =>
+        {
             animator.SetTrigger("LoadGame");
         };
         Action quit = () =>
@@ -85,7 +90,7 @@ void Start()
 
 
         MenuItem newGame = new MenuItem("New Game", start);
-        MenuItem loadGame = new MenuItem("Load", quit);
+        MenuItem loadGame = new MenuItem("Load", load);
         MenuItem quitGame = new MenuItem("Quit", quit);
 
         AbstractMenuComposite settings = f.createSubmenu("Settings", new List<AbstractMenuComposite>
@@ -154,9 +159,6 @@ void Start()
         {
             testMapSize.ButtonName = StaticTestSettings.getMapSize().ToString();
         };
-
-       
-
 
 
         MenuItem testStart = new MenuItem("Test start", start);

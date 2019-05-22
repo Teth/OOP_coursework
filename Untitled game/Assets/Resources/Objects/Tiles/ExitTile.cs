@@ -117,8 +117,8 @@ public class OpenedState : ExitTileStateInterface
     public void PlayerOnTile()
     {
         Debug.Log("EXIT");
-        gameData.IncrementLevel();
-        SceneManager.LoadScene("SampleScene");
+        PlayerPrefs.SetInt("LevelCleared", PlayerPrefs.GetInt("LevelCleared") + 1);
+        SceneManager.LoadScene("LoadingScene");
     }
 }
 
