@@ -13,6 +13,7 @@ public class Enemy : MonoBehaviour
     GameObject player;
     public int damage;
     public int health;
+    public HealthBar healthBar;
     HealthController healthController { get; set; }
     Vector2 playerLastEnterance;
     //
@@ -24,6 +25,7 @@ public class Enemy : MonoBehaviour
         isPlayerAppeared = false;
         //enemyController = new EnemyController(new MeleeRatController());
         healthController = new HealthController(health);
+        healthController.hpbar = healthBar;
         body = GetComponent<Rigidbody2D>();
         player = GameObject.FindWithTag("Player");
     }

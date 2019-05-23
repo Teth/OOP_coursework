@@ -7,6 +7,7 @@ public class HealthController
     public int maxHealth;
     public bool IsAlive { get; set; }
     public int healthAmount;
+    public HealthBar hpbar;
     public HealthController(int health = 100)
     {
         healthAmount = health;
@@ -17,6 +18,8 @@ public class HealthController
     public void ReceiveDamage(int damage)
     {
         healthAmount -= damage;
+        if(hpbar)
+            hpbar.setSize((float)healthAmount / maxHealth);
         if (healthAmount <= 0)
         {
             IsAlive = false;

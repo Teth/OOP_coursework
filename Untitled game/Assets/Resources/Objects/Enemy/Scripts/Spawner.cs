@@ -15,7 +15,8 @@ public class Spawner
 
     public void Spawn(GameMap map, Tileset tileset)
     {
-        Locations mapType = StaticTestSettings.getLocation();
+        NextLevelData nextLevelData = new AssetProxy(typeof(NextLevelData)).LoadAsset("Objects/NextData.asset");
+        Locations mapType = nextLevelData.GetLocation();
         AbstractSpawner enemySpawner;
         switch (mapType)
         {
@@ -59,11 +60,13 @@ public class Spawner
 public abstract class AbstractSpawner
 {
     protected GameObject playerPrefab;
+    protected GameObject healtBarPrefab;
 
     public AbstractSpawner()
     {
         AssetProxy prefabLoader = new AssetProxy(typeof(GameObject));
         playerPrefab = prefabLoader.LoadAsset("Objects/Player/Player.prefab");
+        healtBarPrefab  = prefabLoader.LoadAsset("Objects/HpBar/healthBar.prefab");
     }
 
     public abstract void Spawn(GameMap map, Tileset tileset);
@@ -140,6 +143,9 @@ public class ForestSpawner : AbstractSpawner
         {
             enemyFactory = (Random.value < 0.5) ? new RatFactory() : (AbstractEnemyFactory)new GnollFactory();
             enemyObject = IsEnemyRangedOrMelee() ? enemyFactory.CreateRangedEnemy() : enemyFactory.CreateMeleeEnemy();
+            GameObject hpBar = Object.Instantiate(healtBarPrefab);
+            hpBar.GetComponent<HealthBar>().setTarget(enemyObject);
+            enemyObject.GetComponent<Enemy>().healthBar = hpBar.GetComponent<HealthBar>();
             enemyObject.transform.position = new Vector2(spawnPosition.x + 0.5f, spawnPosition.y + 0.5f);
         }
     }
@@ -161,6 +167,9 @@ public class DesertSpawner : AbstractSpawner
         {
             enemyFactory = (Random.value < 0.5) ? new DemonFactory() : (AbstractEnemyFactory)new GnollFactory();
             enemyObject = IsEnemyRangedOrMelee() ? enemyFactory.CreateRangedEnemy() : enemyFactory.CreateMeleeEnemy();
+            GameObject hpBar = Object.Instantiate(healtBarPrefab);
+            hpBar.GetComponent<HealthBar>().setTarget(enemyObject);
+            enemyObject.GetComponent<Enemy>().healthBar = hpBar.GetComponent<HealthBar>();
             enemyObject.transform.position = new Vector2(spawnPosition.x + 0.5f, spawnPosition.y + 0.5f);
         }
     }
@@ -182,6 +191,9 @@ public class VillageSpawner : AbstractSpawner
         {
             enemyFactory = (Random.value < 0.5) ? new SkeletonFactory() : (AbstractEnemyFactory)new RatFactory();
             enemyObject = IsEnemyRangedOrMelee() ? enemyFactory.CreateRangedEnemy() : enemyFactory.CreateMeleeEnemy();
+            GameObject hpBar = Object.Instantiate(healtBarPrefab);
+            hpBar.GetComponent<HealthBar>().setTarget(enemyObject);
+            enemyObject.GetComponent<Enemy>().healthBar = hpBar.GetComponent<HealthBar>();
             enemyObject.transform.position = new Vector2(spawnPosition.x + 0.5f, spawnPosition.y + 0.5f);
         }
     }

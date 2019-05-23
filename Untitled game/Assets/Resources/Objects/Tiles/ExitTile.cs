@@ -125,10 +125,12 @@ public class OpenedState : ExitTileStateInterface
 public class ClosedState : ExitTileStateInterface
 {
     GameObject bossEnemy;
+    GameObject hpbar;
 
     public ClosedState()
     {
         AssetProxy GameObjectLoader = new AssetProxy(typeof(GameObject));
+        hpbar = GameObjectLoader.LoadAsset("Objects/HpBar/healthBar.prefab");
         bossEnemy = GameObjectLoader.LoadAsset("Objects/Enemy/Skeleton.prefab");
         // redo to spawner
     }
@@ -138,6 +140,10 @@ public class ClosedState : ExitTileStateInterface
         GameObject bossEnemy = Object.Instantiate(this.bossEnemy, parentTransform);
         Enemy enemyBossScript = bossEnemy.GetComponent<Enemy>();
         enemyBossScript.SetParameters(7, 5, new EnemyController(new RangedSkeletonController()), 50, 5, 10);
+        GameObject hpBar = Object.Instantiate(hpbar);
+        hpBar.GetComponent<HealthBar>().setTarget(bossEnemy);
+        bossEnemy.GetComponent<Enemy>().healthBar = hpBar.GetComponent<HealthBar>();
+        bossEnemy.transform.localScale = new Vector3(2, 2, 2);
         bossEnemy.tag = "Boss";
     }
 

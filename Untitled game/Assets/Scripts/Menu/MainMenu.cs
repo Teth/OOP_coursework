@@ -83,15 +83,15 @@ void Start()
         };
 
         AMC_Factory f = new AMC_Factory(buttonPrefab, canvas_ui);
-        MenuItem r1 = new MenuItem("HD", setResolutionHD);
-        MenuItem r2 = new MenuItem("Okay", setResolution);
-        MenuItem r3 = new MenuItem("Bad", setResolutionbad);
+        MenuElement r1 = new MenuElement("HD", setResolutionHD);
+        MenuElement r2 = new MenuElement("Okay", setResolution);
+        MenuElement r3 = new MenuElement("Bad", setResolutionbad);
         
 
 
-        MenuItem newGame = new MenuItem("New Game", start);
-        MenuItem loadGame = new MenuItem("Load", load);
-        MenuItem quitGame = new MenuItem("Quit", quit);
+        MenuElement newGame = new MenuElement("New Game", start);
+        MenuElement loadGame = new MenuElement("Load", load);
+        MenuElement quitGame = new MenuElement("Quit", quit);
 
         AbstractMenuComposite settings = f.createSubmenu("Settings", new List<AbstractMenuComposite>
         {
@@ -113,17 +113,17 @@ void Start()
         AbstractMenuComposite play = f.createSubmenu("Play", list);
 
 
-        MenuItem SetLocForest = new MenuItem("Forest",setlocForest);
-        MenuItem SetLocDesert = new MenuItem("Desert",setlocDesert);
-        MenuItem SetLocVillage = new MenuItem("Village",setlocVillage);
+        MenuElement SetLocForest = new MenuElement("Forest",setlocForest);
+        MenuElement SetLocDesert = new MenuElement("Desert",setlocDesert);
+        MenuElement SetLocVillage = new MenuElement("Village",setlocVillage);
 
-        MenuItem setMapSizeSmall = new MenuItem("50x50", setmapSmall);
-        MenuItem setMapSizeMedium = new MenuItem("100x100", setmapMed);
-        MenuItem setMapSizeLarge = new MenuItem("200x200", setmapLarge);
+        MenuElement setMapSizeSmall = new MenuElement("50x50", setmapSmall);
+        MenuElement setMapSizeMedium = new MenuElement("100x100", setmapMed);
+        MenuElement setMapSizeLarge = new MenuElement("200x200", setmapLarge);
 
-        MenuItem setTypeDung = new MenuItem("Dungeon", setTypeDungeon);
-        MenuItem setTypeRuin = new MenuItem("Ruins", setTypeRuins);
-        MenuItem setTypeVill = new MenuItem("Village", setTypeVillage);
+        MenuElement setTypeDung = new MenuElement("Dungeon", setTypeDungeon);
+        MenuElement setTypeRuin = new MenuElement("Ruins", setTypeRuins);
+        MenuElement setTypeVill = new MenuElement("Village", setTypeVillage);
 
         AbstractMenuComposite testMapTypes = f.createSubmenu(StaticTestSettings.GetMapType().ToString(), new List<AbstractMenuComposite>
         {
@@ -161,7 +161,7 @@ void Start()
         };
 
 
-        MenuItem testStart = new MenuItem("Test start", start);
+        MenuElement testStart = new MenuElement("Test start", start);
 
 
         List<AbstractMenuComposite> testList = new List<AbstractMenuComposite>
@@ -341,7 +341,7 @@ public class SubMenu : AbstractMenuComposite
             }
             else
             {
-                MenuItem menuItem = ((MenuItem)abstractMenus[i]);
+                MenuElement menuItem = ((MenuElement)abstractMenus[i]);
                 currentButton.GetComponent<Button>().onClick.AddListener(() => menuItem.ClickOperation());
             }
         }
@@ -349,11 +349,11 @@ public class SubMenu : AbstractMenuComposite
     }
 }
 
-public class MenuItem : AbstractMenuComposite
+public class MenuElement : AbstractMenuComposite
 {
     Action function;
 
-    public MenuItem(string title, Action action) : base(title, null, null)
+    public MenuElement(string title, Action action) : base(title, null, null)
     {
         function = action;
     }

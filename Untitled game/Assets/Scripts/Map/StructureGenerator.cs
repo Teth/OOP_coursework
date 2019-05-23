@@ -46,22 +46,24 @@ public class MapFacade
         int stX = settings.x;
         int stY = settings.y;
         List<Vector3> availabeleExitLocation = new List<Vector3>();
-        for (int i = -stX/2; i < stX/2; i++)
+        do
         {
-            for (int j = -stY/2; j < stY/2; j++)
+            for (int i = -stX / 2; i < stX / 2; i++)
             {
-                if(tiles.GetIndoorTiles().Contains(mapOperations.GetGroundTile(new Vector3Int(i, j, 0))) && !tiles.GetStructureTiles().Contains(mapOperations.GetStructureTile(new Vector3Int(i, j, 0))))
+                for (int j = -stY / 2; j < stY / 2; j++)
                 {
-                    if(Random.value < 0.1)
+                    if (tiles.GetIndoorTiles().Contains(mapOperations.GetGroundTile(new Vector3Int(i, j, 0))) && !tiles.GetStructureTiles().Contains(mapOperations.GetStructureTile(new Vector3Int(i, j, 0))))
                     {
-                        availabeleExitLocation.Add(new Vector3(i, j));
-                    }   
+                        if (Random.value < 0.1)
+                        {
+                            availabeleExitLocation.Add(new Vector3(i, j));
+                        }
+                    }
                 }
             }
         }
+        while (availabeleExitLocation.Count == 0);
         int exitLocationIndex = Random.Range(0, availabeleExitLocation.Count);
-        Debug.Log("Index " + exitLocationIndex);
-        Debug.Log("Count " + availabeleExitLocation.Count);
         Vector3 exitLocation = availabeleExitLocation[exitLocationIndex];
         exitTile.transform.Translate(exitLocation);
         exitTile.transform.Translate(new Vector3(0.5f, 0.5f));
