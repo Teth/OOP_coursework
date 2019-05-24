@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {    
@@ -24,6 +25,7 @@ public class Player : MonoBehaviour
         if (healthController.IsAlive)
         {
             playerController.MoveCharacter(body, speed);
+            if(Time.timeScale != 0)
             playerController.MouseRotation(transform);
         }
         else
@@ -31,6 +33,7 @@ public class Player : MonoBehaviour
             body.rotation = 0;
             body.velocity = Vector2.zero;
             Destroy(gameObject);
+            SceneManager.LoadScene("GameOverScene");
         }
     }
 

@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1377900836}
   - component: {fileID: 1377900835}
-  - component: {fileID: 1377900834}
   - component: {fileID: 1377900832}
   - component: {fileID: 1377900831}
+  - component: {fileID: 1868753984968077830}
   m_Layer: 0
   m_Name: Gnoll
   m_TagString: Enemy
@@ -47,7 +47,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0
+  m_LinearDrag: 5
   m_AngularDrag: 0.05
   m_GravityScale: 0
   m_Material: {fileID: 0}
@@ -55,22 +55,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!70 &1377900834
-CapsuleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1377900830}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0.23945814, y: 0.19879182}
-  m_Size: {x: 2.1114264, y: 4.0356965}
-  m_Direction: 0
 --- !u!212 &1377900832
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -108,7 +92,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 3
-  m_Sprite: {fileID: 21300000, guid: 38fb307cd815cf74188df252b8c8d7a9, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 2140788fb2d783149823ddf368ed2cac, type: 3}
   m_Color: {r: 1, g: 0.413412, b: 0.25, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -134,5 +118,22 @@ MonoBehaviour:
   speed: 0
   damage: 0
   health: 0
+  healthBar: {fileID: 0}
   agroRange: 0
   attackRange: 0
+--- !u!58 &1868753984968077830
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1377900830}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.019943476, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.35
