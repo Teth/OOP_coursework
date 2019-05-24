@@ -28,6 +28,8 @@ public class Enemy : MonoBehaviour
         healthController.hpbar = healthBar;
         body = GetComponent<Rigidbody2D>();
         player = GameObject.FindWithTag("Player");
+        GameObject bone = new AssetProxy(typeof(GameObject)).LoadAsset("Objects/Projectiles/Bone.prefab");
+        Physics2D.IgnoreCollision(GetComponent<Collider2D>(), bone.GetComponent<CapsuleCollider2D>());
     }
 
     private bool IsWayToPlayerExists()

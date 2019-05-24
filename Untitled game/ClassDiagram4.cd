@@ -1,0 +1,274 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" GroupingSetting="Access">
+  <Class Name="ExitTile" Collapsed="true">
+    <Position X="1.25" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQCBAAIACkQAAAAAAAIAAAABCAAAQAFAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Resources\Objects\Tiles\ExitTile.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="state" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="OpenedState" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="2.25" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAAAAAgAAQAAAAACAAAkAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Resources\Objects\Tiles\ExitTile.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="ClosedState" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="0.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAwAAAAAAAAAAAAAAAAAAAAAgIAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Resources\Objects\Tiles\ExitTile.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TilesetCreator">
+    <Position X="8" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Map\TilesetFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ForestTilesetCreator" Collapsed="true">
+    <Position X="8" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Map\TilesetFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DesertTilesetCreator">
+    <Position X="5.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Map\TilesetFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VillageTilesetCreator" Collapsed="true">
+    <Position X="10.25" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Map\TilesetFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Tileset" Collapsed="true">
+    <Position X="2.25" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAACAAAEAAAACgAAAAQIAAAAAAAAAAEAIA=</HashCode>
+      <FileName>Assets\Scripts\Map\Tileset.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_tileset" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="ForestTileset" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="0.5" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQQAAEQAAAAAAAAEAAAACgAAAAwAgAAAAAAAAAEAIA=</HashCode>
+      <FileName>Assets\Scripts\Map\Tileset.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DesertTileset" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="2.25" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQQAAEQAAAAAAAAEAAAACgAAAAwAgAAAAAAAAAEAIA=</HashCode>
+      <FileName>Assets\Scripts\Map\Tileset.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="VillageTileset" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="4" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQQAAEQAAAAAAAAEAAAACgAAAAwAgAAAAAAAAAEAIA=</HashCode>
+      <FileName>Assets\Scripts\Map\Tileset.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="AssetProxy" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="9.5" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAEAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Map\AssetLoaderProxy.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="loader" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="AssetLoader" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="7.25" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAEAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Map\AssetLoaderProxy.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="AMC_Factory" Collapsed="true">
+    <Position X="1.75" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAACAAAAAAAAAACAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Menu\MainMenu.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AbstractMenuComposite" Collapsed="true">
+    <Position X="1.75" Y="12.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAABIAIAAAAAAAAAAAAAACAQBAEAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Menu\MainMenu.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SubMenu" Collapsed="true">
+    <Position X="0.5" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAIAAAAAAAAAAAAAACAABAEAAAAAAIAAAA=</HashCode>
+      <FileName>Assets\Scripts\Menu\MainMenu.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MenuElement" Collapsed="true">
+    <Position X="2.75" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAAgAAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Menu\MainMenu.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MapFacade" Collapsed="true">
+    <Position X="8" Y="12.25" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="groundModifier" Type="TilemapModifier">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.539" Y="0.409" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="structuresModifier" Type="TilemapModifier">
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="-1.156" Y="0.274" Height="0.182" Width="1.649" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="decorationsModifier" Type="TilemapModifier">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.767" Y="0.122" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="roomRectangleConstructor" Type="RandomRectangleConstructor">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-1.95" Y="0.491" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="mapOperations" Type="MapModifier">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.587" Y="0.134" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="globalMapRectangleConstructor" Type="RandomRectangleConstructor">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-1.893" Y="0.182" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AQAAEBAQAQAAgEADACACAAcAAgAAAAAACAKDoQBAAAA=</HashCode>
+      <FileName>Assets\Scripts\Map\StructureGenerator.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="groundModifier" />
+      <Field Name="structuresModifier" />
+      <Field Name="decorationsModifier" />
+      <Field Name="roomRectangleConstructor" />
+      <Field Name="mapOperations" />
+      <Field Name="globalMapRectangleConstructor" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="TilemapModifier" Collapsed="true">
+    <Position X="6" Y="13.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAAIAAAAAAAQAAAgAAAAAAAAAAACAAAgAA=</HashCode>
+      <FileName>Assets\Scripts\Map\MapHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RandomRectangleConstructor" Collapsed="true">
+    <Position X="9.75" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAIAAABAAgAAAEAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Map\MapHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MapModifier" Collapsed="true">
+    <Position X="8" Y="13.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAEAAAEAAAAAAAAAAAAAAAAAAAAAAEAAA=</HashCode>
+      <FileName>Assets\Scripts\Map\MapHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MapGenerator" Collapsed="true">
+    <Position X="6.75" Y="15.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAEAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Map\MapBuilder.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="b" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="DungeonMapBuilder" Collapsed="true">
+    <Position X="4.5" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAIBAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Map\MapBuilder.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VillageMapBuilder" Collapsed="true">
+    <Position X="6.75" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAIBAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Map\MapBuilder.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RuinsMapBuilder" Collapsed="true">
+    <Position X="2.25" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAIBAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Map\MapBuilder.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MapBuilder" Collapsed="true">
+    <Position X="4.5" Y="15.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AFAAMBAAAAAAAACAAAAAAAAAAAAAAAAAIAAAAAAAAAE=</HashCode>
+      <FileName>Assets\Scripts\Map\MapBuilder.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="mapGen" Collapsed="true">
+    <Position X="9.75" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAABAAACAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Map\mapGen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="ExitTileStateInterface" Collapsed="true">
+    <Position X="1.25" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Resources\Objects\Tiles\ExitTile.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="ITileset" Collapsed="true">
+    <Position X="2.25" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAEAAAACgAAAAQAAAAAAAAAAAEAIA=</HashCode>
+      <FileName>Assets\Scripts\Map\Tileset.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="AssetLoaderInterface" Collapsed="true">
+    <Position X="8.25" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Map\AssetLoaderProxy.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

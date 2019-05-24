@@ -5,7 +5,12 @@ using UnityEditor;
 using UnityEngine;
 // proxy pattern
 
-public class AssetProxy
+public interface AssetLoaderInterface
+{
+    dynamic LoadAsset(string path);
+}
+
+public class AssetProxy : AssetLoaderInterface
 {
     public AssetProxy(System.Type type)
     {
@@ -16,7 +21,7 @@ public class AssetProxy
 
     public dynamic LoadAsset(string path)
     {
-        if(File.Exists(Application.dataPath + "/Resources/" + path))
+        //if(File.Exists(Application.dataPath + "/Resources/" + path))
         {
             return loader.LoadAsset(Path.ChangeExtension(path,null));
         }
@@ -26,7 +31,7 @@ public class AssetProxy
     
 }
 
-public class AssetLoader
+public class AssetLoader : AssetLoaderInterface
 {
     System.Type type;
 
@@ -35,7 +40,7 @@ public class AssetLoader
         this.type = type;
     }
 
-    internal dynamic LoadAsset(string path)
+    public dynamic LoadAsset(string path)
     {
         Object obj = Resources.Load(path, type);
         return obj;
